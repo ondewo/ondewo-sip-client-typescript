@@ -168,7 +168,6 @@ build: check_out_correct_submodule_versions build_compiler update_package npm_ru
 	make remove_npm_script
 	make create_npm_package
 	make install_dependencies
-	rm -rf ${SIP_APIS_DIR}/google
 
 
 remove_npm_script:
@@ -199,7 +198,6 @@ check_out_correct_submodule_versions: ## Fetches all Submodules and checksout sp
 	git -C ${SIP_APIS_DIR} checkout ${SIP_API_GIT_BRANCH}
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} fetch --all
 	git -C ${ONDEWO_PROTO_COMPILER_DIR} checkout ${ONDEWO_PROTO_COMPILER_GIT_BRANCH}
-	cp -R ${SIP_APIS_DIR}/googleapis/google ${SIP_APIS_DIR}/google
 	@echo "DONE checking out correct submodule versions."
 
 npm_run_build: ## Runs the build command in package.json
