@@ -17,8 +17,8 @@ export
 
 ONDEWO_SIP_VERSION = 3.1.0
 
-SIP_API_GIT_BRANCH=3.1.0
-ONDEWO_PROTO_COMPILER_GIT_BRANCH=master
+SIP_API_GIT_BRANCH=tags/3.1.0
+ONDEWO_PROTO_COMPILER_GIT_BRANCH=tags/4.1.1
 ONDEWO_PROTO_COMPILER_DIR=ondewo-proto-compiler
 SIP_APIS_DIR=src/ondewo-sip-api
 SIP_PROTOS_DIR=${SIP_APIS_DIR}/ondewo
@@ -65,6 +65,21 @@ help: ## Print usage info about help targets
 
 makefile_chapters: ## Shows all sections of Makefile
 	@echo `cat Makefile| grep "########################################################" -A 1 | grep -v "########################################################"`
+
+check_build: #Checks if all built proto-code is there
+	@rm -rf build_check.txt
+	@for proto in `find src/ondewo-sip-api/ondewo -iname "*.proto*"`; \
+	do \
+		cat $${proto} | grep import | grep "google/" | cut -d "/" -f 3 | cut -d "." -f 1 >> build_check.txt; \
+		echo $${proto} | cut -d "/" -f 5 | cut -d "." -f 1 >> build_check.txt; \
+	done
+	@echo "`sort build_check.txt | uniq`" > build_check.txt
+	@for file in `cat build_check.txt`;\
+	do \
+		find api -iname "*pb*" | grep -q $${file}; \
+		if test $$? != 0; then  echo "No Proto-Code for $${file}" & exit 1;fi \
+	done
+	@rm -rf build_check.txt
 
 ########################################################
 #       Repo Specific Make Targets
