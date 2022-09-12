@@ -106,12 +106,12 @@ release: ## Create Github and NPM Release
 	git add package-lock.json
 	git add ${ONDEWO_PROTO_COMPILER_DIR}
 	git status
-# git commit -m "Preparing for Release ${ONDEWO_SIP_VERSION}"
-# git push
-# make publish_npm_via_docker
-# make create_release_branch
-# make create_release_tag
-# make release_to_github_via_docker_image
+	git commit -m "Preparing for Release ${ONDEWO_SIP_VERSION}"
+	git push
+	make publish_npm_via_docker
+	make create_release_branch
+	make create_release_tag
+	make release_to_github_via_docker_image
 	@echo "Finished Release"
 
 gh_release: build_utils_docker_image release_to_github_via_docker_image ## Builds Utils Image and Releases to Github
@@ -181,8 +181,8 @@ run_release_with_devops: ## Runs the make release target with credentials from d
 spc: ## Checks if the Release Branch, Tag and Pypi version already exist
 	$(eval filtered_branches:= $(shell git branch --all | grep "release/${ONDEWO_SIP_VERSION}"))
 	$(eval filtered_tags:= $(shell git tag --list | grep "${ONDEWO_SIP_VERSION}"))
-# @if test "$(filtered_branches)" != ""; then echo "-- Test 1: Branch exists!!" & exit 1; else echo "-- Test 1: Branch is fine";fi
-# @if test "$(filtered_tags)" != ""; then echo "-- Test 2: Tag exists!!" & exit 1; else echo "-- Test 2: Tag is fine";fi
+	@if test "$(filtered_branches)" != ""; then echo "-- Test 1: Branch exists!!" & exit 1; else echo "-- Test 1: Branch is fine";fi
+	@if test "$(filtered_tags)" != ""; then echo "-- Test 2: Tag exists!!" & exit 1; else echo "-- Test 2: Tag is fine";fi
 
 
 ########################################################
@@ -204,13 +204,13 @@ build: check_out_correct_submodule_versions build_compiler update_package npm_ru
 	make install_dependencies
 
 
-remove_npm_script:
+remove_npm_script: ## Removes Script Section in Package.json
 	$(eval script_lines:= $(shell cat package.json | sed -n '/\"scripts\"/,/\}\,/='))
 	$(eval start:= $(shell echo $(script_lines) | cut -c 1-2))
 	$(eval end:= $(shell echo $(script_lines) | rev | cut -c 1-3 | rev))
 	@sed -i '$(start),$(end)d' package.json
 
-create_npm_package:
+create_npm_package: ## Creates NPM Package for Release
 	rm -rf npm
 	mkdir npm
 	cp -R api npm
@@ -219,7 +219,7 @@ create_npm_package:
 	cp LICENSE npm
 	cp README.md npm
 
-install_dependencies:
+install_dependencies: ## Installs dev-dependecies
 	npm i eslint --save-dev
 	npm i prettier --save-dev
 	npm i @typescript-eslint/eslint-plugin --save-dev
