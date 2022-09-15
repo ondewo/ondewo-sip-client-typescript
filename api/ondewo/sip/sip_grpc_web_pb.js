@@ -69,13 +69,13 @@ proto.ondewo.sip.SipPromiseClient = function (hostname, credentials, options) {
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.StartSessionRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_StartSession = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/StartSession',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.StartSessionRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.StartSessionRequest} request
 	 * @return {!Uint8Array}
@@ -83,7 +83,7 @@ const methodDescriptor_Sip_StartSession = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -91,9 +91,9 @@ const methodDescriptor_Sip_StartSession = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.startSession = function (request, metadata, callback) {
@@ -111,7 +111,7 @@ proto.ondewo.sip.SipClient.prototype.startSession = function (request, metadata,
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.startSession = function (request, metadata) {
@@ -127,13 +127,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.startSession = function (request, me
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.google.protobuf.Empty,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_EndSession = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/EndSession',
 	grpc.web.MethodType.UNARY,
 	google_protobuf_empty_pb.Empty,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.google.protobuf.Empty} request
 	 * @return {!Uint8Array}
@@ -141,7 +141,7 @@ const methodDescriptor_Sip_EndSession = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -149,9 +149,9 @@ const methodDescriptor_Sip_EndSession = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.endSession = function (request, metadata, callback) {
@@ -169,7 +169,7 @@ proto.ondewo.sip.SipClient.prototype.endSession = function (request, metadata, c
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.endSession = function (request, metadata) {
@@ -185,13 +185,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.endSession = function (request, meta
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.StartCallRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_StartCall = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/StartCall',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.StartCallRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.StartCallRequest} request
 	 * @return {!Uint8Array}
@@ -199,7 +199,7 @@ const methodDescriptor_Sip_StartCall = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -207,9 +207,9 @@ const methodDescriptor_Sip_StartCall = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.startCall = function (request, metadata, callback) {
@@ -227,7 +227,7 @@ proto.ondewo.sip.SipClient.prototype.startCall = function (request, metadata, ca
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.startCall = function (request, metadata) {
@@ -243,13 +243,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.startCall = function (request, metad
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.EndCallRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_EndCall = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/EndCall',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.EndCallRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.EndCallRequest} request
 	 * @return {!Uint8Array}
@@ -257,7 +257,7 @@ const methodDescriptor_Sip_EndCall = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -265,9 +265,9 @@ const methodDescriptor_Sip_EndCall = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.endCall = function (request, metadata, callback) {
@@ -285,7 +285,7 @@ proto.ondewo.sip.SipClient.prototype.endCall = function (request, metadata, call
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.endCall = function (request, metadata) {
@@ -301,13 +301,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.endCall = function (request, metadat
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.TransferCallRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_TransferCall = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/TransferCall',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.TransferCallRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.TransferCallRequest} request
 	 * @return {!Uint8Array}
@@ -315,7 +315,7 @@ const methodDescriptor_Sip_TransferCall = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -323,9 +323,9 @@ const methodDescriptor_Sip_TransferCall = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.transferCall = function (request, metadata, callback) {
@@ -343,7 +343,7 @@ proto.ondewo.sip.SipClient.prototype.transferCall = function (request, metadata,
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.transferCall = function (request, metadata) {
@@ -359,13 +359,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.transferCall = function (request, me
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.RegisterAccountRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_RegisterAccount = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/RegisterAccount',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.RegisterAccountRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.RegisterAccountRequest} request
 	 * @return {!Uint8Array}
@@ -373,7 +373,7 @@ const methodDescriptor_Sip_RegisterAccount = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -381,9 +381,9 @@ const methodDescriptor_Sip_RegisterAccount = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.registerAccount = function (request, metadata, callback) {
@@ -401,7 +401,7 @@ proto.ondewo.sip.SipClient.prototype.registerAccount = function (request, metada
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.registerAccount = function (request, metadata) {
@@ -533,13 +533,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.getSipStatusHistory = function (requ
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.ondewo.sip.PlayWavFilesRequest,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_PlayWavFiles = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/PlayWavFiles',
 	grpc.web.MethodType.UNARY,
 	proto.ondewo.sip.PlayWavFilesRequest,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.ondewo.sip.PlayWavFilesRequest} request
 	 * @return {!Uint8Array}
@@ -547,7 +547,7 @@ const methodDescriptor_Sip_PlayWavFiles = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -555,9 +555,9 @@ const methodDescriptor_Sip_PlayWavFiles = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.playWavFiles = function (request, metadata, callback) {
@@ -575,7 +575,7 @@ proto.ondewo.sip.SipClient.prototype.playWavFiles = function (request, metadata,
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.playWavFiles = function (request, metadata) {
@@ -591,13 +591,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.playWavFiles = function (request, me
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.google.protobuf.Empty,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_Mute = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/Mute',
 	grpc.web.MethodType.UNARY,
 	google_protobuf_empty_pb.Empty,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.google.protobuf.Empty} request
 	 * @return {!Uint8Array}
@@ -605,7 +605,7 @@ const methodDescriptor_Sip_Mute = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -613,9 +613,9 @@ const methodDescriptor_Sip_Mute = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.mute = function (request, metadata, callback) {
@@ -633,7 +633,7 @@ proto.ondewo.sip.SipClient.prototype.mute = function (request, metadata, callbac
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.mute = function (request, metadata) {
@@ -649,13 +649,13 @@ proto.ondewo.sip.SipPromiseClient.prototype.mute = function (request, metadata) 
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.google.protobuf.Empty,
- *   !proto.google.protobuf.Empty>}
+ *   !proto.ondewo.sip.SipStatus>}
  */
 const methodDescriptor_Sip_UnMute = new grpc.web.MethodDescriptor(
 	'/ondewo.sip.Sip/UnMute',
 	grpc.web.MethodType.UNARY,
 	google_protobuf_empty_pb.Empty,
-	google_protobuf_empty_pb.Empty,
+	proto.ondewo.sip.SipStatus,
 	/**
 	 * @param {!proto.google.protobuf.Empty} request
 	 * @return {!Uint8Array}
@@ -663,7 +663,7 @@ const methodDescriptor_Sip_UnMute = new grpc.web.MethodDescriptor(
 	function (request) {
 		return request.serializeBinary();
 	},
-	google_protobuf_empty_pb.Empty.deserializeBinary
+	proto.ondewo.sip.SipStatus.deserializeBinary
 );
 
 /**
@@ -671,9 +671,9 @@ const methodDescriptor_Sip_UnMute = new grpc.web.MethodDescriptor(
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.ondewo.sip.SipClient.prototype.unMute = function (request, metadata, callback) {
@@ -691,7 +691,7 @@ proto.ondewo.sip.SipClient.prototype.unMute = function (request, metadata, callb
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.google.protobuf.Empty>}
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
  *     Promise that resolves to the response
  */
 proto.ondewo.sip.SipPromiseClient.prototype.unMute = function (request, metadata) {
