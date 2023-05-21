@@ -10,67 +10,67 @@ export class SipClient {
 		options?: null | { [index: string]: any }
 	);
 
-	startSession(
-		request: ondewo_sip_sip_pb.StartSessionRequest,
+	sipStartSession(
+		request: ondewo_sip_sip_pb.SipStartSessionRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	endSession(
+	sipEndSession(
 		request: google_protobuf_empty_pb.Empty,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	startCall(
-		request: ondewo_sip_sip_pb.StartCallRequest,
+	sipStartCall(
+		request: ondewo_sip_sip_pb.SipStartCallRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	endCall(
-		request: ondewo_sip_sip_pb.EndCallRequest,
+	sipEndCall(
+		request: ondewo_sip_sip_pb.SipEndCallRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	transferCall(
-		request: ondewo_sip_sip_pb.TransferCallRequest,
+	sipTransferCall(
+		request: ondewo_sip_sip_pb.SipTransferCallRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	registerAccount(
-		request: ondewo_sip_sip_pb.RegisterAccountRequest,
+	sipRegisterAccount(
+		request: ondewo_sip_sip_pb.SipRegisterAccountRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	getSipStatus(
+	sipGetSipStatus(
 		request: google_protobuf_empty_pb.Empty,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	getSipStatusHistory(
+	sipGetSipStatusHistory(
 		request: google_protobuf_empty_pb.Empty,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatusHistoryResponse) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatusHistoryResponse>;
 
-	playWavFiles(
-		request: ondewo_sip_sip_pb.PlayWavFilesRequest,
+	sipPlayWavFiles(
+		request: ondewo_sip_sip_pb.SipPlayWavFilesRequest,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	mute(
+	sipMute(
 		request: google_protobuf_empty_pb.Empty,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
 	): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
-	unMute(
+	sipUnMute(
 		request: google_protobuf_empty_pb.Empty,
 		metadata: grpcWeb.Metadata | undefined,
 		callback: (err: grpcWeb.RpcError, response: ondewo_sip_sip_pb.SipStatus) => void
@@ -84,49 +84,52 @@ export class SipPromiseClient {
 		options?: null | { [index: string]: any }
 	);
 
-	startSession(
-		request: ondewo_sip_sip_pb.StartSessionRequest,
+	sipStartSession(
+		request: ondewo_sip_sip_pb.SipStartSessionRequest,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	endSession(
+	sipEndSession(
 		request: google_protobuf_empty_pb.Empty,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	startCall(
-		request: ondewo_sip_sip_pb.StartCallRequest,
+	sipStartCall(
+		request: ondewo_sip_sip_pb.SipStartCallRequest,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	endCall(request: ondewo_sip_sip_pb.EndCallRequest, metadata?: grpcWeb.Metadata): Promise<ondewo_sip_sip_pb.SipStatus>;
-
-	transferCall(
-		request: ondewo_sip_sip_pb.TransferCallRequest,
+	sipEndCall(
+		request: ondewo_sip_sip_pb.SipEndCallRequest,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	registerAccount(
-		request: ondewo_sip_sip_pb.RegisterAccountRequest,
+	sipTransferCall(
+		request: ondewo_sip_sip_pb.SipTransferCallRequest,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	getSipStatus(
+	sipRegisterAccount(
+		request: ondewo_sip_sip_pb.SipRegisterAccountRequest,
+		metadata?: grpcWeb.Metadata
+	): Promise<ondewo_sip_sip_pb.SipStatus>;
+
+	sipGetSipStatus(
 		request: google_protobuf_empty_pb.Empty,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	getSipStatusHistory(
+	sipGetSipStatusHistory(
 		request: google_protobuf_empty_pb.Empty,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatusHistoryResponse>;
 
-	playWavFiles(
-		request: ondewo_sip_sip_pb.PlayWavFilesRequest,
+	sipPlayWavFiles(
+		request: ondewo_sip_sip_pb.SipPlayWavFilesRequest,
 		metadata?: grpcWeb.Metadata
 	): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	mute(request: google_protobuf_empty_pb.Empty, metadata?: grpcWeb.Metadata): Promise<ondewo_sip_sip_pb.SipStatus>;
+	sipMute(request: google_protobuf_empty_pb.Empty, metadata?: grpcWeb.Metadata): Promise<ondewo_sip_sip_pb.SipStatus>;
 
-	unMute(request: google_protobuf_empty_pb.Empty, metadata?: grpcWeb.Metadata): Promise<ondewo_sip_sip_pb.SipStatus>;
+	sipUnMute(request: google_protobuf_empty_pb.Empty, metadata?: grpcWeb.Metadata): Promise<ondewo_sip_sip_pb.SipStatus>;
 }

@@ -1,6 +1,6 @@
 {
 	"name": "@ondewo/sip-client-typescript",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"description": "Ondewo (SIP) Client library for typescript as a commonjs module",
 	"main": "public-api.js",
 	"typings": "public-api.d.ts",

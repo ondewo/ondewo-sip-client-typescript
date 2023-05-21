@@ -3,71 +3,71 @@ import * as jspb from 'google-protobuf';
 import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
-export class EndCallRequest extends jspb.Message {
+export class SipEndCallRequest extends jspb.Message {
 	getHardHangup(): boolean;
-	setHardHangup(value: boolean): EndCallRequest;
+	setHardHangup(value: boolean): SipEndCallRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): EndCallRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: EndCallRequest): EndCallRequest.AsObject;
-	static serializeBinaryToWriter(message: EndCallRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): EndCallRequest;
-	static deserializeBinaryFromReader(message: EndCallRequest, reader: jspb.BinaryReader): EndCallRequest;
+	toObject(includeInstance?: boolean): SipEndCallRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipEndCallRequest): SipEndCallRequest.AsObject;
+	static serializeBinaryToWriter(message: SipEndCallRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipEndCallRequest;
+	static deserializeBinaryFromReader(message: SipEndCallRequest, reader: jspb.BinaryReader): SipEndCallRequest;
 }
 
-export namespace EndCallRequest {
+export namespace SipEndCallRequest {
 	export type AsObject = {
 		hardHangup: boolean;
 	};
 }
 
-export class StartCallRequest extends jspb.Message {
+export class SipStartCallRequest extends jspb.Message {
 	getCalleeId(): string;
-	setCalleeId(value: string): StartCallRequest;
+	setCalleeId(value: string): SipStartCallRequest;
 
 	getHeadersMap(): jspb.Map<string, string>;
-	clearHeadersMap(): StartCallRequest;
+	clearHeadersMap(): SipStartCallRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): StartCallRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: StartCallRequest): StartCallRequest.AsObject;
-	static serializeBinaryToWriter(message: StartCallRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): StartCallRequest;
-	static deserializeBinaryFromReader(message: StartCallRequest, reader: jspb.BinaryReader): StartCallRequest;
+	toObject(includeInstance?: boolean): SipStartCallRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipStartCallRequest): SipStartCallRequest.AsObject;
+	static serializeBinaryToWriter(message: SipStartCallRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipStartCallRequest;
+	static deserializeBinaryFromReader(message: SipStartCallRequest, reader: jspb.BinaryReader): SipStartCallRequest;
 }
 
-export namespace StartCallRequest {
+export namespace SipStartCallRequest {
 	export type AsObject = {
 		calleeId: string;
 		headersMap: Array<[string, string]>;
 	};
 }
 
-export class RegisterAccountRequest extends jspb.Message {
+export class SipRegisterAccountRequest extends jspb.Message {
 	getAccountName(): string;
-	setAccountName(value: string): RegisterAccountRequest;
+	setAccountName(value: string): SipRegisterAccountRequest;
 
 	getPassword(): string;
-	setPassword(value: string): RegisterAccountRequest;
+	setPassword(value: string): SipRegisterAccountRequest;
 
 	getAuthUsername(): string;
-	setAuthUsername(value: string): RegisterAccountRequest;
+	setAuthUsername(value: string): SipRegisterAccountRequest;
 
 	getOutboundProxy(): string;
-	setOutboundProxy(value: string): RegisterAccountRequest;
+	setOutboundProxy(value: string): SipRegisterAccountRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): RegisterAccountRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: RegisterAccountRequest): RegisterAccountRequest.AsObject;
-	static serializeBinaryToWriter(message: RegisterAccountRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): RegisterAccountRequest;
+	toObject(includeInstance?: boolean): SipRegisterAccountRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipRegisterAccountRequest): SipRegisterAccountRequest.AsObject;
+	static serializeBinaryToWriter(message: SipRegisterAccountRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipRegisterAccountRequest;
 	static deserializeBinaryFromReader(
-		message: RegisterAccountRequest,
+		message: SipRegisterAccountRequest,
 		reader: jspb.BinaryReader
-	): RegisterAccountRequest;
+	): SipRegisterAccountRequest;
 }
 
-export namespace RegisterAccountRequest {
+export namespace SipRegisterAccountRequest {
 	export type AsObject = {
 		accountName: string;
 		password: string;
@@ -76,44 +76,50 @@ export namespace RegisterAccountRequest {
 	};
 }
 
-export class StartSessionRequest extends jspb.Message {
+export class SipStartSessionRequest extends jspb.Message {
 	getAccountName(): string;
-	setAccountName(value: string): StartSessionRequest;
+	setAccountName(value: string): SipStartSessionRequest;
 
 	getAutoAnswerInterval(): number;
-	setAutoAnswerInterval(value: number): StartSessionRequest;
+	setAutoAnswerInterval(value: number): SipStartSessionRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): StartSessionRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: StartSessionRequest): StartSessionRequest.AsObject;
-	static serializeBinaryToWriter(message: StartSessionRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): StartSessionRequest;
-	static deserializeBinaryFromReader(message: StartSessionRequest, reader: jspb.BinaryReader): StartSessionRequest;
+	toObject(includeInstance?: boolean): SipStartSessionRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipStartSessionRequest): SipStartSessionRequest.AsObject;
+	static serializeBinaryToWriter(message: SipStartSessionRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipStartSessionRequest;
+	static deserializeBinaryFromReader(
+		message: SipStartSessionRequest,
+		reader: jspb.BinaryReader
+	): SipStartSessionRequest;
 }
 
-export namespace StartSessionRequest {
+export namespace SipStartSessionRequest {
 	export type AsObject = {
 		accountName: string;
 		autoAnswerInterval: number;
 	};
 }
 
-export class TransferCallRequest extends jspb.Message {
+export class SipTransferCallRequest extends jspb.Message {
 	getTransferId(): string;
-	setTransferId(value: string): TransferCallRequest;
+	setTransferId(value: string): SipTransferCallRequest;
 
 	getHeadersMap(): jspb.Map<string, string>;
-	clearHeadersMap(): TransferCallRequest;
+	clearHeadersMap(): SipTransferCallRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): TransferCallRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: TransferCallRequest): TransferCallRequest.AsObject;
-	static serializeBinaryToWriter(message: TransferCallRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): TransferCallRequest;
-	static deserializeBinaryFromReader(message: TransferCallRequest, reader: jspb.BinaryReader): TransferCallRequest;
+	toObject(includeInstance?: boolean): SipTransferCallRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipTransferCallRequest): SipTransferCallRequest.AsObject;
+	static serializeBinaryToWriter(message: SipTransferCallRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipTransferCallRequest;
+	static deserializeBinaryFromReader(
+		message: SipTransferCallRequest,
+		reader: jspb.BinaryReader
+	): SipTransferCallRequest;
 }
 
-export namespace TransferCallRequest {
+export namespace SipTransferCallRequest {
 	export type AsObject = {
 		transferId: string;
 		headersMap: Array<[string, string]>;
@@ -220,21 +226,24 @@ export namespace SipStatusHistoryResponse {
 	};
 }
 
-export class PlayWavFilesRequest extends jspb.Message {
+export class SipPlayWavFilesRequest extends jspb.Message {
 	getWavFilesList(): Array<Uint8Array | string>;
-	setWavFilesList(value: Array<Uint8Array | string>): PlayWavFilesRequest;
-	clearWavFilesList(): PlayWavFilesRequest;
-	addWavFiles(value: Uint8Array | string, index?: number): PlayWavFilesRequest;
+	setWavFilesList(value: Array<Uint8Array | string>): SipPlayWavFilesRequest;
+	clearWavFilesList(): SipPlayWavFilesRequest;
+	addWavFiles(value: Uint8Array | string, index?: number): SipPlayWavFilesRequest;
 
 	serializeBinary(): Uint8Array;
-	toObject(includeInstance?: boolean): PlayWavFilesRequest.AsObject;
-	static toObject(includeInstance: boolean, msg: PlayWavFilesRequest): PlayWavFilesRequest.AsObject;
-	static serializeBinaryToWriter(message: PlayWavFilesRequest, writer: jspb.BinaryWriter): void;
-	static deserializeBinary(bytes: Uint8Array): PlayWavFilesRequest;
-	static deserializeBinaryFromReader(message: PlayWavFilesRequest, reader: jspb.BinaryReader): PlayWavFilesRequest;
+	toObject(includeInstance?: boolean): SipPlayWavFilesRequest.AsObject;
+	static toObject(includeInstance: boolean, msg: SipPlayWavFilesRequest): SipPlayWavFilesRequest.AsObject;
+	static serializeBinaryToWriter(message: SipPlayWavFilesRequest, writer: jspb.BinaryWriter): void;
+	static deserializeBinary(bytes: Uint8Array): SipPlayWavFilesRequest;
+	static deserializeBinaryFromReader(
+		message: SipPlayWavFilesRequest,
+		reader: jspb.BinaryReader
+	): SipPlayWavFilesRequest;
 }
 
-export namespace PlayWavFilesRequest {
+export namespace SipPlayWavFilesRequest {
 	export type AsObject = {
 		wavFilesList: Array<Uint8Array | string>;
 	};
