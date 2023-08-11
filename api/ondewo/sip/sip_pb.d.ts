@@ -156,6 +156,9 @@ export class SipStatus extends jspb.Message {
 	getExceptionTraceback(): string;
 	setExceptionTraceback(value: string): SipStatus;
 
+	getNluSessionName(): string;
+	setNluSessionName(value: string): SipStatus;
+
 	serializeBinary(): Uint8Array;
 	toObject(includeInstance?: boolean): SipStatus.AsObject;
 	static toObject(includeInstance: boolean, msg: SipStatus): SipStatus.AsObject;
@@ -175,6 +178,7 @@ export namespace SipStatus {
 		description: string;
 		exceptionName: string;
 		exceptionTraceback: string;
+		nluSessionName: string;
 	};
 
 	export enum StatusType {
