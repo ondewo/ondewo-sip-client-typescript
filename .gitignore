@@ -1,4 +1,7 @@
-node_modules
-.vscode
-npm
 *.env
+.code
+.idea
+.vscode
+node_modules
+npm
+tmp
