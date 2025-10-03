@@ -234,7 +234,7 @@ proto.ondewo.sip.SipEndCallRequest.prototype.toObject = function(opt_includeInst
  */
 proto.ondewo.sip.SipEndCallRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    hardHangup: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+hardHangup: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
 
   if (includeInstance) {
@@ -364,8 +364,8 @@ proto.ondewo.sip.SipStartCallRequest.prototype.toObject = function(opt_includeIn
  */
 proto.ondewo.sip.SipStartCallRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    calleeId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : []
+calleeId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -528,10 +528,10 @@ proto.ondewo.sip.SipRegisterAccountRequest.prototype.toObject = function(opt_inc
  */
 proto.ondewo.sip.SipRegisterAccountRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    password: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    authUsername: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    outboundProxy: jspb.Message.getFieldWithDefault(msg, 4, "")
+accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+password: jspb.Message.getFieldWithDefault(msg, 2, ""),
+authUsername: jspb.Message.getFieldWithDefault(msg, 3, ""),
+outboundProxy: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -748,8 +748,8 @@ proto.ondewo.sip.SipStartSessionRequest.prototype.toObject = function(opt_includ
  */
 proto.ondewo.sip.SipStartSessionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    autoAnswerInterval: jspb.Message.getFieldWithDefault(msg, 2, 0)
+accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+autoAnswerInterval: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -908,8 +908,8 @@ proto.ondewo.sip.SipTransferCallRequest.prototype.toObject = function(opt_includ
  */
 proto.ondewo.sip.SipTransferCallRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    transferId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : []
+transferId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -1072,16 +1072,16 @@ proto.ondewo.sip.SipStatus.prototype.toObject = function(opt_includeInstance) {
  */
 proto.ondewo.sip.SipStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    statusType: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    calleeId: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    transferCallId: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : [],
-    description: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    exceptionName: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    exceptionTraceback: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    nluSessionName: jspb.Message.getFieldWithDefault(msg, 10, "")
+accountName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+statusType: jspb.Message.getFieldWithDefault(msg, 3, 0),
+calleeId: jspb.Message.getFieldWithDefault(msg, 4, ""),
+transferCallId: jspb.Message.getFieldWithDefault(msg, 5, ""),
+headersMap: (f = msg.getHeadersMap()) ? f.toObject(includeInstance, undefined) : [],
+description: jspb.Message.getFieldWithDefault(msg, 7, ""),
+exceptionName: jspb.Message.getFieldWithDefault(msg, 8, ""),
+exceptionTraceback: jspb.Message.getFieldWithDefault(msg, 9, ""),
+nluSessionName: jspb.Message.getFieldWithDefault(msg, 10, "")
   };
 
   if (includeInstance) {
@@ -1532,7 +1532,7 @@ proto.ondewo.sip.SipStatusHistoryResponse.prototype.toObject = function(opt_incl
  */
 proto.ondewo.sip.SipStatusHistoryResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    statusHistoryList: jspb.Message.toObjectList(msg.getStatusHistoryList(),
+statusHistoryList: jspb.Message.toObjectList(msg.getStatusHistoryList(),
     proto.ondewo.sip.SipStatus.toObject, includeInstance)
   };
 
@@ -1692,7 +1692,7 @@ proto.ondewo.sip.SipPlayWavFilesRequest.prototype.toObject = function(opt_includ
  */
 proto.ondewo.sip.SipPlayWavFilesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    wavFilesList: msg.getWavFilesList_asB64()
+wavFilesList: msg.getWavFilesList_asB64()
   };
 
   if (includeInstance) {
