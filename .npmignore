@@ -1,1 +1,5 @@
 src/ondewo-sip-api
+.test-build/
+coverage/
+.nyc_output/
+auth/*.spec.ts
