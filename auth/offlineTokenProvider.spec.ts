@@ -30,6 +30,7 @@ import {
   type TokenFetchResponse
 } from "./offlineTokenProvider";
 
+/** Baseline login options shared by every test; individual cases override fields via spread. */
 const BASE_OPTIONS: OfflineTokenLoginOptions = {
   keycloakUrl: "https://auth.example.com/auth",
   realm: "ondewo-ccai-platform",
@@ -38,27 +39,43 @@ const BASE_OPTIONS: OfflineTokenLoginOptions = {
   password: "super-secret"
 };
 
+/** The OIDC token endpoint that {@link BASE_OPTIONS} must resolve to (asserted on the recorded URL). */
 const EXPECTED_TOKEN_ENDPOINT: string =
   "https://auth.example.com/auth/realms/ondewo-ccai-platform/protocol/openid-connect/token";
 
+/** One canned response in a {@link makeFetchStub} sequence. */
 interface StubResponse {
+  /** HTTP status code to report; defaults to `200` when omitted. */
   status?: number;
+  /** Response body; a string is returned verbatim, anything else is `JSON.stringify`-ed. */
   body: unknown;
 }
 
+/** A single token-endpoint request captured by the fetch stub. */
 interface RecordedCall {
+  /** The endpoint URL the stub was called with. */
   url: string;
+  /** The init object (method, headers, raw body) the stub received. */
   init: TokenFetchInit;
+  /** The form-encoded body parsed into `URLSearchParams` for convenient assertions. */
   params: URLSearchParams;
 }
 
+/** The injectable fetch plus the list of calls it recorded, returned by {@link makeFetchStub}. */
 interface FetchStub {
+  /** The stubbed fetch to pass as `fetchImpl`. */
   fetchImpl: TokenFetch;
+  /** Calls captured so far, in invocation order. */
   calls: RecordedCall[];
 }
 
-// Build a fake fetch that returns a sequence of JSON responses (one per call) and records the
-// requests it received, so assertions can inspect the form-encoded body and the URL.
+/**
+ * Build a fake fetch that returns a sequence of JSON responses (one per call) and records the
+ * requests it received, so assertions can inspect the form-encoded body and the URL.
+ *
+ * @param responses - Canned responses consumed in order, one per fetch invocation.
+ * @returns The injectable `fetchImpl` and the live array of recorded calls.
+ */
 function makeFetchStub(responses: StubResponse[]): FetchStub {
   const calls: RecordedCall[] = [];
   const fetchImpl: TokenFetch = (url: string, init: TokenFetchInit): Promise<TokenFetchResponse> => {
@@ -78,7 +95,11 @@ function makeFetchStub(responses: StubResponse[]): FetchStub {
   return { fetchImpl, calls };
 }
 
-// Yield to the microtask queue so an awaited refresh inside a fired timer can settle.
+/**
+ * Yield to the microtask queue so an awaited refresh inside a fired timer can settle.
+ *
+ * @returns A promise that resolves on the next tick of the event loop.
+ */
 function flushMicrotasks(): Promise<void> {
   return new Promise((resolve: () => void): void => {
     process.nextTick(resolve);

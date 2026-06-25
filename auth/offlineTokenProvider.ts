@@ -21,11 +21,13 @@
 // token is exposed for an `Authorization: Bearer <token>` gRPC metadata header. The refresh loop stops
 // after `tokenExpirationInS` (if given) has elapsed since login.
 
-// Seconds of head-room subtracted from a token's `expires_in` so the refresh fires before the access
-// token actually lapses (covers clock skew + the round-trip to Keycloak).
+/**
+ * Seconds of head-room subtracted from a token's `expires_in` so the refresh fires before the access
+ * token actually lapses (covers clock skew + the round-trip to Keycloak).
+ */
 const REFRESH_SKEW_IN_S: number = 30;
 
-// Lower bound for the scheduled refresh delay so a tiny/zero `expires_in` cannot spin a hot loop.
+/** Lower bound for the scheduled refresh delay so a tiny/zero `expires_in` cannot spin a hot loop. */
 const MIN_REFRESH_DELAY_IN_S: number = 1;
 
 /**
@@ -33,15 +35,21 @@ const MIN_REFRESH_DELAY_IN_S: number = 1;
  * self-contained (no DOM lib dependency) while still typing the injectable `fetchImpl`.
  */
 export interface TokenFetchResponse {
+  /** Whether the HTTP status is in the 2xx success range. */
   ok: boolean;
+  /** The numeric HTTP status code (used to build the error message on a non-2xx response). */
   status: number;
+  /** Resolves to the raw response body as text, parsed downstream as the Keycloak token JSON. */
   text(): Promise<string>;
 }
 
 /** Init object passed to the injectable fetch. */
 export interface TokenFetchInit {
+  /** HTTP method for the token-endpoint request (always `"POST"`). */
   method: string;
+  /** Request headers (the form-encoded content type and a JSON `Accept`). */
   headers: Record<string, string>;
+  /** The `application/x-www-form-urlencoded` request body. */
   body: string;
 }
 
@@ -50,8 +58,11 @@ export type TokenFetch = (url: string, init: TokenFetchInit) => Promise<TokenFet
 
 /** Parsed Keycloak token-endpoint response (only the fields this helper consumes). */
 interface KeycloakTokenResponse {
+  /** The short-lived bearer access token used for the `Authorization` gRPC metadata header. */
   access_token: string;
+  /** The offline refresh token; absent unless the SDK client granted the `offline_access` scope. */
   refresh_token?: string;
+  /** Lifetime of `access_token` in seconds; drives the auto-refresh delay (skew-adjusted). */
   expires_in?: number;
 }
 
@@ -133,17 +144,28 @@ async function postTokenRequest(
  * read {@link getAuthorizationHeader} for the gRPC `Authorization` metadata and call {@link stop} when done.
  */
 export class OfflineTokenProvider {
+  /** Fully-resolved OIDC token endpoint URL for the configured realm. */
   private readonly tokenEndpoint: string;
+  /** Public SDK client id sent on every grant (no client_secret accompanies it). */
   private readonly clientId: string;
+  /** Optional cap (seconds) on how long the auto-refresh loop runs after login; `undefined` = unbounded. */
   private readonly tokenExpirationInS: number | undefined;
+  /** Fetch transport used for the token-endpoint calls (injected in tests, else the global fetch). */
   private readonly fetchImpl: TokenFetch;
+  /** Epoch-ms clock used for deadline math (injected in tests, else `Date.now`). */
   private readonly nowInMs: () => number;
 
+  /** The current access token, or `null` before bootstrap / after the bounded loop has lapsed. */
   private accessToken: string | null;
+  /** The latest offline refresh token (rotated when Keycloak returns a new one), or `null` pre-bootstrap. */
   private refreshToken: string | null;
+  /** Handle of the single armed refresh timer, or `null` when none is scheduled. */
   private timer: ReturnType<typeof setTimeout> | null;
+  /** Whether {@link stop} has been called; suppresses any further refresh scheduling. */
   private stopped: boolean;
+  /** Epoch-ms instant past which the loop stops renewing, or `null` when unbounded. */
   private deadlineInMs: number | null;
+  /** Optional callback invoked with the error of a failed background refresh, or `null` if unregistered. */
   private onRefreshErrorHandler: ((error: unknown) => void) | null;
 
   public constructor(options: OfflineTokenLoginOptions) {
