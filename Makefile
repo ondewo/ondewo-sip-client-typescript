@@ -230,6 +230,7 @@ install_dependencies: ## Installs Dev-Dependencies
 		@eslint/eslintrc \
 		@eslint/js \
 		@typescript-eslint/eslint-plugin \
+		@typescript-eslint/parser \
 		eslint \
 		global \
 		husky \
