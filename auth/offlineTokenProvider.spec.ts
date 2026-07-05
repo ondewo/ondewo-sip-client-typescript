@@ -392,6 +392,106 @@ runTestCase('login falls back to the global fetch when no fetchImpl is provided'
 	}
 });
 
+runTestCase(
+	'verifySsl omitted (default) => the default transport attaches NO undici dispatcher (TLS verification ON)',
+	async () => {
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', refresh_token: 'offline-1', expires_in: 31 } }
+		]);
+		const originalFetch: typeof globalThis.fetch = globalThis.fetch;
+		// Install the capturing stub as the global fetch so the DEFAULT transport (no fetchImpl) is exercised.
+		globalThis.fetch = stub.fetchImpl as unknown as typeof globalThis.fetch;
+
+		mock.timers.enable({ apis: ['setTimeout'] });
+		try {
+			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS });
+			assert.equal(stub.calls.length, 1);
+			// Secure default: verification ON => no insecure dispatcher on the wire.
+			assert.equal(stub.calls[0].init.dispatcher, undefined);
+			assert.equal(provider.getAccessToken(), 'access-1');
+			provider.stop();
+		} finally {
+			globalThis.fetch = originalFetch;
+			mock.timers.reset();
+		}
+	}
+);
+
+runTestCase(
+	'keycloakVerifySsl:true (explicit) => the default transport attaches NO undici dispatcher (TLS verification ON)',
+	async () => {
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', refresh_token: 'offline-1', expires_in: 31 } }
+		]);
+		const originalFetch: typeof globalThis.fetch = globalThis.fetch;
+		globalThis.fetch = stub.fetchImpl as unknown as typeof globalThis.fetch;
+
+		mock.timers.enable({ apis: ['setTimeout'] });
+		try {
+			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, keycloakVerifySsl: true });
+			assert.equal(stub.calls.length, 1);
+			assert.equal(stub.calls[0].init.dispatcher, undefined);
+			provider.stop();
+		} finally {
+			globalThis.fetch = originalFetch;
+			mock.timers.reset();
+		}
+	}
+);
+
+runTestCase(
+	'keycloakVerifySsl:false => the default transport attaches an insecure undici dispatcher (TLS verification OFF)',
+	async () => {
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', refresh_token: 'offline-1', expires_in: 31 } }
+		]);
+		const originalFetch: typeof globalThis.fetch = globalThis.fetch;
+		globalThis.fetch = stub.fetchImpl as unknown as typeof globalThis.fetch;
+
+		mock.timers.enable({ apis: ['setTimeout'] });
+		try {
+			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, keycloakVerifySsl: false });
+			assert.equal(stub.calls.length, 1);
+			// verify OFF under Node => a dispatcher (undici Agent) is present on the request init.
+			const dispatcher: unknown = stub.calls[0].init.dispatcher;
+			assert.notEqual(dispatcher, undefined);
+			assert.equal(dispatcher, stub.calls[0].init.dispatcher);
+			// It is an undici Agent instance (constructor name), proving the insecure default path was taken.
+			assert.equal((dispatcher as { constructor: { name: string } }).constructor.name, 'Agent');
+			assert.equal(provider.getAccessToken(), 'access-1');
+			provider.stop();
+		} finally {
+			globalThis.fetch = originalFetch;
+			mock.timers.reset();
+		}
+	}
+);
+
+runTestCase(
+	'keycloakVerifySsl:false is IGNORED for an injected fetchImpl (no dispatcher added; existing behavior preserved)',
+	async () => {
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', refresh_token: 'offline-1', expires_in: 31 } }
+		]);
+
+		mock.timers.enable({ apis: ['setTimeout'] });
+		try {
+			// Custom transport injected: the flag must not touch its init (Python parity: flag ignored).
+			const provider: OfflineTokenProvider = await login({
+				...BASE_OPTIONS,
+				keycloakVerifySsl: false,
+				fetchImpl: stub.fetchImpl
+			});
+			assert.equal(stub.calls.length, 1);
+			assert.equal(stub.calls[0].init.dispatcher, undefined);
+			assert.equal(provider.getAccessToken(), 'access-1');
+			provider.stop();
+		} finally {
+			mock.timers.reset();
+		}
+	}
+);
+
 runTestCase('stop() during an in-flight refresh suppresses re-arming the next refresh', async () => {
 	const calls: URLSearchParams[] = [];
 	// Captures the refresh resolver so the test can complete the in-flight refresh on demand.

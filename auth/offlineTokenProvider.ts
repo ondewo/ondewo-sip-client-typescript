@@ -51,6 +51,12 @@ export interface TokenFetchInit {
 	headers: Record<string, string>;
 	/** The `application/x-www-form-urlencoded` request body. */
 	body: string;
+	/**
+	 * Optional undici dispatcher (Node only). The default transport attaches an insecure
+	 * `Agent({ connect: { rejectUnauthorized: false } })` here when `verifySsl` is `false`; the global
+	 * WHATWG fetch honours it. Never set on an injected `fetchImpl` and ignored in a browser bundle.
+	 */
+	dispatcher?: unknown;
 }
 
 /** Injectable fetch signature (a subset of the global `fetch`) used by the token endpoint call. */
@@ -82,6 +88,13 @@ export interface OfflineTokenLoginOptions {
 	tokenExpirationInS?: number;
 	/** Optional fetch override (tests inject a mock); defaults to the global fetch. */
 	fetchImpl?: TokenFetch;
+	/**
+	 * Verify the Keycloak TLS certificate on the token-endpoint call. Default `true` (secure). Set
+	 * `false` ONLY for a self-signed local Envoy (e.g. `https://localhost:12001/auth`). Node-only: it is
+	 * ignored in a browser bundle (the browser owns TLS) and ignored when a custom `fetchImpl` is
+	 * injected. When `false` under Node the default transport attaches an insecure undici dispatcher.
+	 */
+	keycloakVerifySsl?: boolean;
 	/** Optional clock override returning epoch ms (tests); defaults to Date.now. */
 	nowInMs?: () => number;
 }
@@ -139,6 +152,52 @@ async function postTokenRequest(
 	return parsed;
 }
 
+/** Cached insecure undici dispatcher (built once, reused) so `verifySsl:false` costs one Agent. */
+let insecureNodeDispatcher: unknown;
+
+/**
+ * Lazily build a cached undici `Agent` that skips TLS certificate verification -- the Node analog of
+ * Python's `requests.post(..., verify=False)`. Node-guarded and loaded via a dynamic `import("undici")`
+ * so a browser bundle never pulls in `undici` and the flag stays a hard no-op outside Node.
+ *
+ * @returns The insecure dispatcher under Node, or `undefined` in a browser (TLS is owned by the browser).
+ */
+async function getInsecureNodeDispatcher(): Promise<unknown> {
+	const nodeProcess: { versions?: { node?: string } } | undefined = (
+		globalThis as { process?: { versions?: { node?: string } } }
+	).process;
+	/* c8 ignore next 3 -- browser guard: not exercised under the Node test runner */
+	if (nodeProcess === undefined || nodeProcess.versions === undefined || nodeProcess.versions.node === undefined) {
+		return undefined;
+	}
+	if (insecureNodeDispatcher === undefined) {
+		const undiciModuleName: string = 'undici';
+		const undici: { Agent: new (options: unknown) => unknown } = (await import(undiciModuleName)) as {
+			Agent: new (options: unknown) => unknown;
+		};
+		insecureNodeDispatcher = new undici.Agent({ connect: { rejectUnauthorized: false } });
+	}
+	return insecureNodeDispatcher;
+}
+
+/**
+ * Build the DEFAULT token transport (used only when no `fetchImpl` is injected). It delegates to the
+ * global WHATWG fetch, and -- when `verifySsl` is `false` under Node -- attaches an insecure undici
+ * dispatcher to the request init so the token POST skips certificate verification. With `verifySsl`
+ * `true` (the default) it is a plain pass-through to `globalThis.fetch`, i.e. unchanged behavior.
+ *
+ * @param verifySsl - Whether to verify the Keycloak TLS certificate; `false` opts into the insecure path.
+ * @returns A {@link TokenFetch} that resolves the global fetch at call time (honoring test overrides).
+ */
+export function createDefaultTokenFetch(verifySsl: boolean): TokenFetch {
+	return async (url: string, init: TokenFetchInit): Promise<TokenFetchResponse> => {
+		const dispatcher: unknown = verifySsl ? undefined : await getInsecureNodeDispatcher();
+		const effectiveInit: TokenFetchInit = dispatcher !== undefined ? { ...init, dispatcher } : init;
+		const globalFetch: TokenFetch = globalThis.fetch;
+		return globalFetch(url, effectiveInit);
+	};
+}
+
 /**
  * A live access-token holder backed by a bounded auto-refresh loop. Obtain one from {@link login};
  * read {@link getAuthorizationHeader} for the gRPC `Authorization` metadata and call {@link stop} when done.
@@ -172,7 +231,10 @@ export class OfflineTokenProvider {
 		this.tokenEndpoint = buildTokenEndpoint(options.keycloakUrl, options.realm);
 		this.clientId = options.clientId;
 		this.tokenExpirationInS = options.tokenExpirationInS;
-		this.fetchImpl = options.fetchImpl !== undefined ? options.fetchImpl : globalThis.fetch;
+		// A custom fetchImpl always wins (the verifySsl flag is ignored for injected transports); only the
+		// DEFAULT transport honors verifySsl, and only under Node. Absent/undefined verifySsl => secure (true).
+		const verifySsl: boolean = options.keycloakVerifySsl !== false;
+		this.fetchImpl = options.fetchImpl !== undefined ? options.fetchImpl : createDefaultTokenFetch(verifySsl);
 		this.nowInMs = options.nowInMs !== undefined ? options.nowInMs : Date.now;
 
 		this.accessToken = null;
