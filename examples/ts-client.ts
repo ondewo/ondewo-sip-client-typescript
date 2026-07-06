@@ -24,11 +24,18 @@
 // unit-tested with the gRPC client mocked (see `ts-client.spec.ts`). `main()` does the real network I/O
 // and is only run when the file is executed directly.
 
+import * as path from 'node:path';
+
+import * as dotenv from 'dotenv';
 import * as grpcWeb from 'grpc-web';
 
 import { SipPromiseClient } from '../api/ondewo/sip/sip_grpc_web_pb';
 import { SipStartSessionRequest, SipStatus } from '../api/ondewo/sip/sip_pb';
 import { login, OfflineTokenProvider } from '../auth/offlineTokenProvider';
+
+// Load the example configuration from examples/environment.env. The path is resolved relative to this
+// script so the values are picked up no matter what the current working directory is.
+dotenv.config({ path: path.join(__dirname, 'environment.env') });
 
 /**
  * The subset of the generated {@link SipPromiseClient} surface this example relies on. Declaring it as a
@@ -89,25 +96,56 @@ export async function startSipSession(
 /* c8 ignore start -- main() performs real Keycloak + gRPC-web network I/O and is not run by the unit test */
 /**
  * Wire the auth provider and the generated promise client together and start a SIP session. Reads its
- * configuration from environment variables (with example defaults) so it can be run directly:
+ * configuration from `examples/environment.env` (canonical ONDEWO env-var scheme) so it can be run directly:
  *
  *   node --experimental-strip-types examples/ts-client.ts
  */
 async function main(): Promise<void> {
+	// --- Keycloak login configuration (D18 headless-SDK offline-token flow). ---
+	const keycloakUrl: string = process.env.KEYCLOAK_URL ?? 'https://auth.example.com/auth';
+	const realm: string = process.env.KEYCLOAK_REALM ?? 'ondewo-ccai-platform';
+	const clientId: string = process.env.KEYCLOAK_CLIENT_ID ?? 'ondewo-nlu-cai-sdk-public';
+	const username: string = process.env.KEYCLOAK_USER_NAME ?? 'tech-user@example.com';
+	const password: string = process.env.KEYCLOAK_PASSWORD ?? '';
+	const keycloakVerifySsl: boolean = (process.env.KEYCLOAK_VERIFY_SSL ?? 'true').toLowerCase() !== 'false';
+
+	// --- Connection configuration. gRPC-web talks to the envoy proxy in front of the SIP server. ---
+	const host: string = process.env.ONDEWO_HOST ?? 'localhost';
+	const port: string = process.env.ONDEWO_PORT ?? '8080';
+	const useSecureChannel: boolean = (process.env.ONDEWO_USE_SECURE_CHANNEL ?? 'false').toLowerCase() === 'true';
+	const scheme: string = useSecureChannel ? 'https' : 'http';
+	const grpcWebUrl: string = `${scheme}://${host}:${port}`;
+
+	// --- SIP service-specific configuration. ---
+	const accountName: string = process.env.ONDEWO_SIP_ACCOUNT_NAME ?? 'default';
+	const autoAnswerIntervalInS: number = Number(process.env.ONDEWO_SIP_AUTO_ANSWER_INTERVAL ?? '0');
+
+	console.log(`START: logging in to Keycloak realm "${realm}" at ${keycloakUrl} as "${username}"`);
 	const provider: OfflineTokenProvider = await login({
-		keycloakUrl: process.env.ONDEWO_KEYCLOAK_URL ?? 'https://auth.example.com/auth',
-		realm: process.env.ONDEWO_KEYCLOAK_REALM ?? 'ondewo-ccai-platform',
-		clientId: process.env.ONDEWO_SDK_CLIENT_ID ?? 'ondewo-nlu-cai-sdk-public',
-		username: process.env.ONDEWO_SIP_USER_NAME ?? 'tech-user@example.com',
-		password: process.env.ONDEWO_SIP_PASSWORD ?? 'super-secret'
+		keycloakUrl,
+		realm,
+		clientId,
+		username,
+		password,
+		keycloakVerifySsl
 	});
 	try {
-		// gRPC-web talks to the envoy proxy in front of the SIP server, not the raw gRPC port.
-		const grpcWebUrl: string = process.env.ONDEWO_SIP_GRPC_WEB_URL ?? 'http://localhost:8080';
+		console.log(`Connecting to SIP gRPC-web endpoint ${grpcWebUrl}`);
 		const client: SipSessionClient = new SipPromiseClient(grpcWebUrl);
-		const accountName: string = process.env.ONDEWO_SIP_ACCOUNT_NAME ?? 'default';
-		const status: SipStatus.AsObject = await startSipSession(client, provider.getAuthorizationHeader(), accountName, 0);
-		console.log(`SIP session started for account "${status.accountName}" (status type ${status.statusType})`);
+		console.log(`Starting SIP session for account "${accountName}" (autoAnswerInterval=${autoAnswerIntervalInS}s)`);
+		const status: SipStatus.AsObject = await startSipSession(
+			client,
+			provider.getAuthorizationHeader(),
+			accountName,
+			autoAnswerIntervalInS
+		);
+		console.log(`DONE: SIP session started for account "${status.accountName}" (status type ${status.statusType})`);
+	} catch (error: unknown) {
+		// Surface a gRPC failure with its status code + details before it propagates to the entrypoint.
+		if (error instanceof grpcWeb.RpcError) {
+			console.error(`SIP RPC failed: code=${error.code} details=${error.message}`);
+		}
+		throw error;
 	} finally {
 		// Always stop the background token-refresh loop so the process can exit.
 		provider.stop();
@@ -116,8 +154,8 @@ async function main(): Promise<void> {
 
 if (require.main === module) {
 	void main().catch((error: unknown): void => {
-		console.error(error);
-		process.exitCode = 1;
+		console.error('SIP client example failed:', error);
+		process.exit(1);
 	});
 }
 /* c8 ignore stop */
