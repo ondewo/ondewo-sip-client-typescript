@@ -4,9 +4,10 @@
 		"module": "commonjs",
 		"strict": true,
 		"allowJs": true,
+		"skipLibCheck": true,
 		"outDir": "./dist",
 		"types": ["node"]
 	},
-	"include": ["examples/ts-client.ts", "*.ts", "*.js"],
+	"include": ["examples/**/*.ts", "auth/**/*.ts", "*.ts", "*.js"],
 	"exclude": ["node_modules", "api"]
 }

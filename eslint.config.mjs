@@ -21,8 +21,9 @@ export default [
 			'src/ondewo-sip-api',
 			'**/ondewo-proto-compiler',
 			'**/*.mjs',
-			'npm/public-api.d.ts',
-			'npm/public-api.js'
+			'npm/',
+			'.test-build/',
+			'.test-build-examples/'
 		]
 	},
 	...compat.extends(
