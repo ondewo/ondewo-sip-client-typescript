@@ -21,7 +21,8 @@
     "predebug": "mv ondewo-sip-api/googleapis/google ondewo-sip-api/google",
     "debug": "docker run --entrypoint /bin/bash -v ${PWD}:/input-volume -v ${PWD}/..:/output-volume ondewo-typescript-proto-compiler",
     "pretest": "tsc auth/offlineTokenProvider.ts auth/offlineTokenProvider.spec.ts auth/grpcWebEndpoint.spec.ts examples/ts-client.ts examples/ts-client.spec.ts --ignoreConfig --module commonjs --target es2020 --strict --lib es2020,dom --skipLibCheck --sourceMap --types node --typeRoots ./node_modules/@types --outDir .test-build && ln -sfn ../api .test-build/api",
-    "test": "npm run test:auth && npm run test:examples",
+    "test": "npm run test:auth && npm run test:examples && npm run test:release",
+    "test:release": "tsc tests/releaseNotes.spec.ts --ignoreConfig --module commonjs --target es2020 --strict --lib es2020,dom --skipLibCheck --types node --typeRoots ./node_modules/@types --outDir .test-build && node --test .test-build/releaseNotes.spec.js",
     "test:auth": "c8 --check-coverage --lines 100 --branches 100 --functions 100 --include '**/offlineTokenProvider.js' --include '**/grpcWebEndpoint.js' --exclude '**/*.spec.js' --reporter text node --test .test-build/auth/offlineTokenProvider.spec.js .test-build/auth/grpcWebEndpoint.spec.js",
     "test:examples": "c8 --check-coverage --lines 100 --branches 100 --functions 100 --include '**/ts-client.js' --exclude '**/*.spec.js' --reporter text node --test .test-build/examples/ts-client.spec.js"
   },
