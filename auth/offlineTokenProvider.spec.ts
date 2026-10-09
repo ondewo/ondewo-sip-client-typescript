@@ -19,6 +19,7 @@
 
 import { test as runTestCase, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { format, inspect } from 'node:util';
 
 import {
 	login,
@@ -542,4 +543,75 @@ runTestCase('stop() during an in-flight refresh suppresses re-arming the next re
 	} finally {
 		mock.timers.reset();
 	}
+});
+
+runTestCase('logging the provider never prints a token: toJSON, util.inspect and console.log redact both', async () => {
+	const stub: FetchStub = makeFetchStub([
+		{ body: { access_token: 'secret-access-token', refresh_token: 'secret-offline-token', expires_in: 300 } }
+	]);
+	const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl });
+	try {
+		const renderings: string[] = [
+			JSON.stringify(provider),
+			JSON.stringify({ nested: { provider } }),
+			inspect(provider),
+			inspect({ nested: { provider } }, { depth: 5 }),
+			format(provider)
+		];
+		for (const rendered of renderings) {
+			assert.ok(!rendered.includes('secret-access-token'), rendered);
+			assert.ok(!rendered.includes('secret-offline-token'), rendered);
+			assert.ok(!rendered.includes(BASE_OPTIONS.password), rendered);
+			assert.ok(rendered.includes('***REDACTED***'), rendered);
+			assert.ok(rendered.includes(EXPECTED_TOKEN_ENDPOINT), rendered);
+		}
+		assert.deepEqual(JSON.parse(JSON.stringify(provider)), {
+			tokenEndpoint: EXPECTED_TOKEN_ENDPOINT,
+			clientId: BASE_OPTIONS.clientId,
+			accessToken: '***REDACTED***',
+			refreshToken: '***REDACTED***',
+			stopped: false
+		});
+		// Only the logging view is redacted; the token itself is untouched.
+		assert.equal(provider.getAuthorizationHeader(), 'Bearer secret-access-token');
+	} finally {
+		provider.stop();
+	}
+});
+
+runTestCase('console.log of the provider prints the redacted view', async () => {
+	const stub: FetchStub = makeFetchStub([
+		{ body: { access_token: 'secret-access-token', refresh_token: 'secret-offline-token', expires_in: 300 } }
+	]);
+	const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl });
+	const written: string[] = [];
+	const write: ReturnType<typeof mock.method> = mock.method(process.stdout, 'write', (chunk: string): boolean => {
+		written.push(String(chunk));
+		return true;
+	});
+	try {
+		console.log(provider);
+	} finally {
+		write.mock.restore();
+		provider.stop();
+	}
+	const output: string = written.join('');
+	assert.ok(output.includes('***REDACTED***'), output);
+	assert.ok(!output.includes('secret-access-token'), output);
+	assert.ok(!output.includes('secret-offline-token'), output);
+});
+
+runTestCase('an absent or empty token renders as is, not as ***REDACTED***', () => {
+	const provider: OfflineTokenProvider = new OfflineTokenProvider({ ...BASE_OPTIONS });
+	assert.equal(provider.toJSON().accessToken, null);
+	assert.equal(provider.toJSON().refreshToken, null);
+	const tokens: { accessToken: string | null; refreshToken: string | null } = provider as unknown as {
+		accessToken: string | null;
+		refreshToken: string | null;
+	};
+	tokens.accessToken = '';
+	tokens.refreshToken = '';
+	assert.equal(provider.toJSON().accessToken, '');
+	assert.equal(provider.toJSON().refreshToken, '');
+	assert.match(inspect(provider), /accessToken: ''/);
 });

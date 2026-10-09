@@ -198,6 +198,36 @@ export function createDefaultTokenFetch(verifySsl: boolean): TokenFetch {
 	};
 }
 
+/** What {@link OfflineTokenProvider.toJSON} renders in place of a non-empty token. */
+export const REDACTED: string = '***REDACTED***';
+
+/** The logging-safe view of an {@link OfflineTokenProvider}: both tokens redacted. */
+export interface OfflineTokenProviderLogView {
+	/** The OIDC token endpoint. */
+	tokenEndpoint: string;
+	/** The Keycloak client id. */
+	clientId: string;
+	/** `***REDACTED***`, or the token as is when it is `null` (before login) or empty. */
+	accessToken: string | null;
+	/** `***REDACTED***`, or the token as is when it is `null` (before login) or empty. */
+	refreshToken: string | null;
+	/** Whether {@link OfflineTokenProvider.stop} was called. */
+	stopped: boolean;
+}
+
+/**
+ * Redact a token for logging: `null` and `''` render as is, anything else as {@link REDACTED}.
+ *
+ * @param token - The token to render.
+ * @returns The logging-safe rendering.
+ */
+function redactToken(token: string | null): string | null {
+	if (token === null || token === '') {
+		return token;
+	}
+	return REDACTED;
+}
+
 /**
  * A live access-token holder backed by a bounded auto-refresh loop. Obtain one from {@link login};
  * read {@link getAuthorizationHeader} for the gRPC `Authorization` metadata and call {@link stop} when done.
@@ -358,6 +388,35 @@ export class OfflineTokenProvider {
 			throw new TokenError('No access token available; login() has not completed or has lapsed');
 		}
 		return `Bearer ${this.accessToken}`;
+	}
+
+	/**
+	 * A logging-safe view of this provider: the access and refresh tokens render as `***REDACTED***`
+	 * (`null` before login and an empty token stay as they are). `JSON.stringify(provider)` uses it, and so
+	 * do Node's `console.log(provider)` / `util.inspect(provider)` through the hook below, so none of them
+	 * prints a token. {@link OfflineTokenProvider.getAuthorizationHeader} still returns the real one.
+	 *
+	 * @returns The endpoint, client id and stop flag, with both tokens redacted.
+	 */
+	public toJSON(): OfflineTokenProviderLogView {
+		return {
+			tokenEndpoint: this.tokenEndpoint,
+			clientId: this.clientId,
+			accessToken: redactToken(this.accessToken),
+			refreshToken: redactToken(this.refreshToken),
+			stopped: this.stopped
+		};
+	}
+
+	/**
+	 * Node's `util.inspect` hook (used by `console.log`): renders {@link OfflineTokenProvider.toJSON}, so
+	 * logging the provider never prints a token. Looked up via `Symbol.for`, so no `util` import is needed
+	 * and the module stays usable in a browser bundle.
+	 *
+	 * @returns The redacted view.
+	 */
+	public [Symbol.for('nodejs.util.inspect.custom')](): OfflineTokenProviderLogView {
+		return this.toJSON();
 	}
 
 	/** Stop the auto-refresh loop. Idempotent; safe to call from any state. */

@@ -173,8 +173,11 @@ Envoy uses `server.pem` / `server.key` and trusts `ca.pem` for its clients; the 
 
 - The private key of a client certificate belongs in the operating system / browser certificate store, never in page
   code, a bundle, `localStorage` or a config file served to the browser. This SDK refuses one rather than carry it.
-- `createGrpcWebEndpoint` returns only the URL and `{ withCredentials }`; logging it reveals no secret. The bearer
-  token from `login(...)` is a secret: do not log the `Authorization` header or the `OfflineTokenProvider`.
+- `createGrpcWebEndpoint` returns only the URL and `{ withCredentials }`; logging it reveals no secret.
+- The Keycloak tokens are secrets too: `JSON.stringify(provider)`, `console.log(provider)` and `util.inspect(provider)`
+  of the `OfflineTokenProvider` (also nested in another object) render the access and refresh tokens as
+  `***REDACTED***` (`getAuthorizationHeader()` still returns the real one). Do not log the `Authorization` header
+  yourself.
 - `withCredentials: true` also sends the page's cookies for the proxy's origin; restrict the proxy's allowed origins.
 
 ### TLS troubleshooting
