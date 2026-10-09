@@ -237,6 +237,8 @@ create_npm_package: ## Creates NPM Package for Release
 	cp package.json npm
 	cp LICENSE npm
 	cp README.md npm
+	mkdir -p npm/auth
+	npx tsc auth/offlineTokenProvider.ts --ignoreConfig --declaration --module commonjs --target es2020 --strict --lib es2020,dom --skipLibCheck --types node --typeRoots ./node_modules/@types --rootDir auth --outDir npm/auth
 
 install_dependencies: ## Installs Dev-Dependencies
 	npm i --save-dev \
