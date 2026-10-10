@@ -86,6 +86,20 @@ export class SipClient {
                response: ondewo_sip_sip_pb.SipStatus) => void
   ): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
+  sipReportAnsweringMachineDetected(
+    request: ondewo_sip_sip_pb.SipReportAnsweringMachineDetectedRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: ondewo_sip_sip_pb.SipStatus) => void
+  ): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
+
+  sipSetCallMediaControl(
+    request: ondewo_sip_sip_pb.SipSetCallMediaControlRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: ondewo_sip_sip_pb.SipStatus) => void
+  ): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
+
 }
 
 export class SipPromiseClient {
@@ -145,6 +159,16 @@ export class SipPromiseClient {
 
   sipUnMute(
     request: google_protobuf_empty_pb.Empty,
+    metadata?: grpcWeb.Metadata
+  ): Promise<ondewo_sip_sip_pb.SipStatus>;
+
+  sipReportAnsweringMachineDetected(
+    request: ondewo_sip_sip_pb.SipReportAnsweringMachineDetectedRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<ondewo_sip_sip_pb.SipStatus>;
+
+  sipSetCallMediaControl(
+    request: ondewo_sip_sip_pb.SipSetCallMediaControlRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<ondewo_sip_sip_pb.SipStatus>;
 

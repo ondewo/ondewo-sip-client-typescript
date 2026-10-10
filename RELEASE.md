@@ -2,6 +2,44 @@
 
 *****************
 
+## Release ONDEWO SIP Typescript Client 5.5.0
+
+### New Features
+
+* [[OND211-2443]](https://ondewo.atlassian.net/browse/OND211-2443) Regenerated from
+  [ondewo-sip-api 5.5.0](https://github.com/ondewo/ondewo-sip-api/releases/tag/5.5.0) (was 5.4.0). The new API
+  surface in this package:
+  * Answering machine detection: `AnsweringMachineDetectionResult` (verdict, cause, confidence, decision time, rule
+    and cue ids, action taken, call id), `SipStatus.StatusType.OUTGOING_CALL_ANSWERING_MACHINE_DETECTED = 22`,
+    `SipStatus.amdResult`, `SipEndCallRequest.endReason` (`ANSWERING_MACHINE`,
+    `ANSWERING_MACHINE_VOICE_MESSAGE_LEFT`, `END_CALL_REASON_TRANSFERRED`) and `SipEndCallRequest.amdResult`, and
+    the RPC `sipReportAnsweringMachineDetected`.
+  * Call identity: `SipStatus.callId`. A request is scoped to a call with the `x-ondewo-expected-call-id` metadatum
+    (refused with `CallScopeMismatch` on a different value).
+  * Call-scoped media control: the RPC `sipSetCallMediaControl` (`SipSetCallMediaControlRequest`,
+    `MediaControlSetting`, `MediaControlOwner`, `participantsPresent`), reported in `SipStatus.botMuted` and
+    `SipStatus.listeningPaused`.
+  * Truthful transfers: `SipTransferCallRequest.outcomeTimeoutMs` and `SipStatus.sipResponseCode`.
+  * Live call audio messages (`SipCallAudioConfig`, `SipCallAudioFrame`, `SipCallAudioRequest`,
+    `SipCallAudioResponse`, `SipCallAudioStarted`, `SipCallAudioStats`, `SipCallAudioEnded`, `SipCallAudioMode`,
+    `SipCallAudioEndReason`) and `SipStatus.callAudioStreams`. The `SipStreamCallAudio` RPC itself is bidirectional
+    streaming, which gRPC-web cannot express: the generated `SipClient` / `SipPromiseClient` have no method for it.
+  * `SipGetSipStatus` and `SipGetSipStatusHistory` declare `idempotency_level = NO_SIDE_EFFECTS` in the proto. The
+    gRPC-web clients do not retry, so this changes nothing at runtime here.
+* The API change is purely additive: no field, enum value or RPC was renumbered or removed, so code written against
+  5.4.x compiles and stays wire-compatible.
+
+### Improvements
+
+* Regenerated with [ondewo-proto-compiler 5.15.5](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.15.5)
+  (was 5.15.2); `google-protobuf` stays pinned to `4.0.2`, and `tests/bundleStringRoundTrip.spec.ts` stays green.
+* Tests: `tests/sipApiSurface.spec.ts` checks that both generated clients expose `sipReportAnsweringMachineDetected`
+  and `sipSetCallMediaControl`, that there is no `sipStreamCallAudio` method, that the new `SipStatus` fields survive a
+  binary round trip and that the new enum values keep their proto numbers.
+* Tracking API Version [5.5.0](https://github.com/ondewo/ondewo-sip-api/releases/tag/5.5.0) ( [Documentation](https://ondewo.github.io/ondewo-sip-api/) )
+
+*****************
+
 ## Release ONDEWO SIP Typescript Client 5.4.2
 
 ### New Features
