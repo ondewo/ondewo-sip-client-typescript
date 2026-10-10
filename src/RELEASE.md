@@ -2,6 +2,54 @@
 
 *****************
 
+## Release ONDEWO SIP Typescript Client 5.4.2
+
+### New Features
+
+* [[OND211-2443]](https://ondewo.atlassian.net/browse/OND211-2443) `createGrpcWebEndpoint({ host, port, useSecureChannel, withCredentials })`
+  (`auth/grpcWebEndpoint`, re-exported from `auth/offlineTokenProvider` and the package entry point) builds the
+  `hostname` URL and the client options a generated `*Client` / `*PromiseClient` takes. `https://` is the default;
+  `useSecureChannel: false` builds `http://` and logs a warning naming `host:port`; a bare IPv6 host is bracketed;
+  `host`, `port` and both flags are validated (`'false'` is refused, not read as `true`).
+* TLS in a browser is the browser's TLS: the server certificate is checked against the browser / OS trust store and a
+  client certificate (mutual TLS) comes from the browser's certificate store. A config carrying a non-empty
+  `grpcCert` / `grpcClientCert` / `grpcClientKey` (or `grpc_cert` / `grpc_client_cert` / `grpc_client_key`) is
+  therefore refused with an error naming the field, never the value; empty values are ignored. `withCredentials: true`
+  lets a cross-origin call present the browser's client certificate. No error message renders a refused value.
+* README section "TLS, mutual TLS and certificates": modes, the Envoy side of mutual TLS, a test PKI with openssl,
+  security notes and troubleshooting. Documented gap: the generated clients need `XMLHttpRequest`, so gRPC calls run
+  in browsers only; in Node.js only the Keycloak `login` helper is usable and there is no Node.js path for a custom CA
+  or client certificate.
+
+### Bug Fixes
+
+* [[OND211-2443]](https://ondewo.atlassian.net/browse/OND211-2443) `OfflineTokenProvider` no longer leaks its tokens
+  when logged: `JSON.stringify`, `console.log` and `util.inspect` of a provider (also nested in another object) render
+  the access and refresh tokens as `***REDACTED***`. `getAuthorizationHeader()` is unchanged.
+* The npm package now ships the hand-written `auth/` module: the Keycloak `login` helper / `OfflineTokenProvider`
+  (`auth/offlineTokenProvider`) and `auth/grpcWebEndpoint`, re-exported from the package entry point. Up to 5.4.1
+  `create_npm_package` never compiled `auth/`, so the Keycloak helper was not published.
+* `google-protobuf` is pinned to `4.0.2` (was exactly `3.21.4`). The generated code, regenerated with
+  [ondewo-proto-compiler 5.15.2](https://github.com/ondewo/ondewo-proto-compiler/releases/tag/5.15.2),
+  calls `reader.readStringRequireUtf8()` and `jspb.internal.public_for_gencode.serializeMapToBinary()`,
+  which 3.21.4 does not have: with the old pin every `deserializeBinary` of a message carrying a string would throw
+  `TypeError: reader.readStringRequireUtf8 is not a function` (the defect nlu-client-typescript 7.1.0-7.1.2 and
+  csi-client-typescript 5.5.0-5.5.2 shipped). No released version of this package was affected. The regenerated
+  `api/` is committed with this release.
+* Guard: `tests/bundleStringRoundTrip.spec.ts` round-trips a string with multi-byte characters through the generated
+  code; against google-protobuf 3.21.4 it reports 0 passed, 2 failed with that exact TypeError.
+
+### Improvements
+
+* Tests: the endpoint helper's edge cases, including calls through the real grpc-web runtime with a recording
+  `XMLHttpRequest`, and the token redaction. `tests/releaseNotes.spec.ts` pins the RELEASE.md heading spelling the
+  Makefile slices, a `*****` separator ending every section, and non-empty notes for the version being released.
+* RELEASE.md: every section now ends at its separator (the last one ran to the end of the file).
+* The release tolerates an empty "Preparing for Release" commit and commits `auth/` and the generated `README.md`.
+* Tracking API Version [5.4.0](https://github.com/ondewo/ondewo-sip-api/releases/tag/5.4.0) ( [Documentation](https://ondewo.github.io/ondewo-sip-api/) )
+
+*****************
+
 ## Release ONDEWO SIP Typescript Client 5.4.1
 
 ### Bug Fixes
