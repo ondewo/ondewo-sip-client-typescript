@@ -750,5 +750,127 @@ proto.ondewo.sip.SipPromiseClient.prototype.sipUnMute =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.ondewo.sip.SipReportAnsweringMachineDetectedRequest,
+ *   !proto.ondewo.sip.SipStatus>}
+ */
+const methodDescriptor_Sip_SipReportAnsweringMachineDetected = new grpc.web.MethodDescriptor(
+  '/ondewo.sip.Sip/SipReportAnsweringMachineDetected',
+  grpc.web.MethodType.UNARY,
+  proto.ondewo.sip.SipReportAnsweringMachineDetectedRequest,
+  proto.ondewo.sip.SipStatus,
+  /**
+   * @param {!proto.ondewo.sip.SipReportAnsweringMachineDetectedRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ondewo.sip.SipStatus.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ondewo.sip.SipReportAnsweringMachineDetectedRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ondewo.sip.SipClient.prototype.sipReportAnsweringMachineDetected =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/ondewo.sip.Sip/SipReportAnsweringMachineDetected',
+      request,
+      metadata || {},
+      methodDescriptor_Sip_SipReportAnsweringMachineDetected,
+      callback);
+};
+
+
+/**
+ * @param {!proto.ondewo.sip.SipReportAnsweringMachineDetectedRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
+ *     Promise that resolves to the response
+ */
+proto.ondewo.sip.SipPromiseClient.prototype.sipReportAnsweringMachineDetected =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/ondewo.sip.Sip/SipReportAnsweringMachineDetected',
+      request,
+      metadata || {},
+      methodDescriptor_Sip_SipReportAnsweringMachineDetected);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.ondewo.sip.SipSetCallMediaControlRequest,
+ *   !proto.ondewo.sip.SipStatus>}
+ */
+const methodDescriptor_Sip_SipSetCallMediaControl = new grpc.web.MethodDescriptor(
+  '/ondewo.sip.Sip/SipSetCallMediaControl',
+  grpc.web.MethodType.UNARY,
+  proto.ondewo.sip.SipSetCallMediaControlRequest,
+  proto.ondewo.sip.SipStatus,
+  /**
+   * @param {!proto.ondewo.sip.SipSetCallMediaControlRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.ondewo.sip.SipStatus.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.ondewo.sip.SipSetCallMediaControlRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.ondewo.sip.SipStatus)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.ondewo.sip.SipStatus>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.ondewo.sip.SipClient.prototype.sipSetCallMediaControl =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/ondewo.sip.Sip/SipSetCallMediaControl',
+      request,
+      metadata || {},
+      methodDescriptor_Sip_SipSetCallMediaControl,
+      callback);
+};
+
+
+/**
+ * @param {!proto.ondewo.sip.SipSetCallMediaControlRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.ondewo.sip.SipStatus>}
+ *     Promise that resolves to the response
+ */
+proto.ondewo.sip.SipPromiseClient.prototype.sipSetCallMediaControl =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/ondewo.sip.Sip/SipSetCallMediaControl',
+      request,
+      metadata || {},
+      methodDescriptor_Sip_SipSetCallMediaControl);
+};
+
+
 module.exports = proto.ondewo.sip;
 
