@@ -114,6 +114,9 @@ release: ## Create Github and NPM Release
 	git add RELEASE.md
 	git add package.json
 	git add package-lock.json
+# public-api.d.ts / public-api.js are BUILD OUTPUTS: the codegen rewrites the entry point (and its auth/
+# re-exports) on every build, and npm/ ships that copy, so the tag must hold the same files.
+	git add public-api.d.ts public-api.js
 	git add ${ONDEWO_PROTO_COMPILER_DIR}
 	git add ${SIP_APIS_DIR}
 	git status
