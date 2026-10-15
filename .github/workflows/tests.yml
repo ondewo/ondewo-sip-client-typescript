@@ -2,25 +2,42 @@ name: tests
 
 on:
   push:
-    branches: ['**']
+    branches:
+      - master
+      - 'release/**'
+    tags:
+      - '*'
   pull_request:
 
 jobs:
   unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      # actions/checkout starts with a bare `git init`, and git then prints a multi-line
+      # "Using 'master' as the name for the initial branch" hint into every job log. Naming the
+      # default up front silences it; master is this repository's default branch anyway.
+      - name: Name git's default branch
+        run: git config --global init.defaultBranch master
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+
+      # tests/sipApiSurface.spec.ts derives the expected RPCs from the protos in this submodule. It is
+      # public, but .gitmodules names it by SSH, which a runner cannot use, so it is fetched over HTTPS.
+      # ondewo-proto-compiler is not needed by the tests and stays uninitialised.
+      - name: Check out the ondewo-sip-api submodule
+        run: 'git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init src/ondewo-sip-api'
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       # The repo is ~95% generated gRPC/protobuf stubs; coverage is gated on the HAND-WRITTEN surface
-      # (the D18 Keycloak offline-token auth provider). The test compiles the TS provider + spec and runs
-      # node's built-in test runner under c8 with a 100% line/branch/function-coverage gate.
+      # (the Keycloak offline-token auth provider). npm test also runs the examples, the proto-derived
+      # API-surface checks and the release recipe checks (notes, credentials, step order) -- the same
+      # suite `make release` runs before anything is committed or published.
       - name: Unit tests + 100% coverage gate on hand-written code
         run: npm test
