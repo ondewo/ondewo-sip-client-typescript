@@ -16,3 +16,4 @@ grpc_cert
 .test-build/
 coverage/
 .nyc_output/
+.codegen-output/

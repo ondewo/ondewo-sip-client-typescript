@@ -1,0 +1,11 @@
+# The build context of Dockerfile.utils is the repository root. Only the files the `release` stage COPYs
+# are sent; everything else -- above all a devops-accounts clone, node_modules, .git and the submodules --
+# never reaches the docker daemon.
+*
+!Makefile
+!LICENSE
+!README.md
+!RELEASE.md
+!npm
+ondewo-devops-accounts
+**/node_modules

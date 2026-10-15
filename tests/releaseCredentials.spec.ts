@@ -66,7 +66,10 @@ function recipeOf(target: string): string {
 
 /** @returns Every workflow line that interpolates a secret anywhere but into a plain `NAME: ${{ secrets.X }}` mapping. */
 function workflowSecretLines(): string[] {
-	const files: string[] = existsSync(WORKFLOWS_DIR) ? readdirSync(WORKFLOWS_DIR) : [];
+	if (!existsSync(WORKFLOWS_DIR)) {
+		return [];
+	}
+	const files: string[] = readdirSync(WORKFLOWS_DIR);
 	return files.flatMap((file: string): string[] =>
 		readFileSync(join(WORKFLOWS_DIR, file), 'utf8')
 			.split('\n')
@@ -95,17 +98,27 @@ runTestCase('docker run forwards the credentials by name only', () => {
 });
 
 runTestCase('npm reads its token from the environment through .npmrc, never from its argv', () => {
-	assert.equal((MAKEFILE.match(/_authToken/g) ?? []).length, 1);
+	// The publish writes the container's .npmrc; the preflight a throw-away userconfig. Both hold the
+	// literal `${NPM_AUTOMATION_TOKEN}`, which npm substitutes from the environment.
+	assert.equal((MAKEFILE.match(/_authToken/g) ?? []).length, 2);
 	assert.ok(MAKEFILE.includes("npm config set '//registry.npmjs.org/:_authToken' '$${NPM_AUTOMATION_TOKEN}'"));
+	assert.ok(MAKEFILE.includes('"//registry.npmjs.org/:_authToken=\\$${NPM_AUTOMATION_TOKEN}"'));
+	assert.match(recipeOf('release_preflight'), /-e NPM_AUTOMATION_TOKEN \$\(IMAGE_TOOLS_NAME\)/);
+});
+
+runTestCase('gh reads its token from GH_TOKEN per call and never logs in', () => {
+	assert.ok(!MAKEFILE.includes('gh auth login'));
+	assert.ok(recipeOf('build_gh_release').includes('GH_TOKEN="$${GITHUB_GH_TOKEN}" gh release create'));
 });
 
 runTestCase('the devops release hands the credentials to the sub-make through its environment', () => {
-	const recipe: string = recipeOf('run_release_with_devops');
+	const recipe: string = recipeOf('ondewo_release');
 	assert.ok(!recipe.includes('$(info)'));
 	assert.ok(!recipe.includes('$(shell'));
 	assert.ok(recipe.includes('set -a'));
 	assert.ok(recipe.includes("grep -h -E '^(GITHUB_GH_TOKEN|NPM_AUTOMATION_TOKEN)='"));
 	assert.match(recipe, /\$\(MAKE\) release$/);
+	assert.ok(!/^\tset -a/m.test(MAKEFILE.replace(recipe, '')), 'no other recipe exports every variable');
 	assert.equal(/\bmake\b[^\n]*\$\(info\)/.exec(MAKEFILE), null);
 	assert.equal(new RegExp(`(?:\\bmake|\\$\\(MAKE\\))[^\\n]*\\b${SECRET_NAME}=`).exec(RECIPE_LINES.join('\n')), null);
 });

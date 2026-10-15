@@ -1,52 +1,37 @@
-FROM python:3.12-slim
+# Release toolchain for ondewo-sip-client-typescript.
+#
+# Two stages:
+#   tools   -- node/npm, make and gh only, no repository content. `release_preflight`, `release_verify` and
+#              the host fallbacks build `--target tools`, so they work BEFORE `make build` produced npm/.
+#   release -- tools + the files `make docker_npm_release` and `make push_to_gh` read (npm/, RELEASE.md).
+#
+# No credential is baked in: the Makefile forwards GITHUB_GH_TOKEN / NPM_AUTOMATION_TOKEN by name
+# (`docker run -e NAME`) to the one container that uses each of them.
+
+# node 24.14.0 on Debian bookworm, pinned by digest (the tag alone can be re-pointed).
+FROM node:24.14.0-bookworm-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8 AS tools
+
+ARG GH_VERSION=2.101.0
+ARG GH_DEB_SHA256=f876a3b87bf67c94f773d17becca4dc7340b056dab901473a9260ee2a73e237b
 
 ENV LANG=C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Vienna
 
-ENV GITHUB_GH_TOKEN=<GITHUB_GH_TOKEN>
-ENV NPM_AUTOMATION_TOKEN=<NPM_AUTOMATION_TOKEN>
-
-RUN apt-get update -qq  \
-  && apt-get dist-upgrade -qq -y --no-install-recommends --fix-missing make tmux vim sed tree tk-dev curl sudo tzdata \
-  && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime  \
-  && echo $TZ > /etc/timezone \
-  && dpkg-reconfigure --frontend noninteractive tzdata \
+RUN apt-get update -qq \
+  && apt-get install -qq -y --no-install-recommends ca-certificates curl make \
+  && curl -fsSL -o /tmp/gh.deb "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.deb" \
+  && echo "${GH_DEB_SHA256}  /tmp/gh.deb" | sha256sum -c - \
+  && apt-get install -qq -y --no-install-recommends /tmp/gh.deb \
+  && rm -f /tmp/gh.deb \
   && apt-get clean \
-  && apt-get purge -y --auto-remove \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-
-ENV NVM_DIR /home
-ENV NODE_VERSION=24.14.0
-
-RUN . ~/.nvm/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
-
-ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install -y gh
+  && rm -rf /var/lib/apt/lists/* /var/tmp/*
 
 WORKDIR /home/ondewo/
 
-COPY Makefile .
+FROM tools AS release
 
-COPY LICENSE .
-
-COPY README.md .
-
-COPY RELEASE.md .
+COPY Makefile LICENSE README.md RELEASE.md ./
 
 COPY npm npm
 
-# run the container forever
-CMD tail -f /dev/null
+CMD ["tail", "-f", "/dev/null"]
