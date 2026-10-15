@@ -251,16 +251,33 @@ TODO after PR merge:
   make ondewo_release
   ```
 
-  <br>
-  The release process can be divided into 6 Steps:
+`make ondewo_release` checks that the release branch and tag do not exist yet (`spc`), loads the GitHub
+and npm tokens from `ondewo-devops-accounts` (or from the directory `DEVOPS_ACCOUNT_DIR` names), deletes
+that clone before anything else runs (also when the release fails), and then runs `make release`:
 
-1. `build` specified version of the `ondewo-sip-api`
-2. `commit and push` all changes in code resulting from the `build`
-3. Publish the created `npm` folder to `npmjs.com`
-4. Create and push the `release branch` e.g. `release/1.3.20`
-5. Create and push the `release tag` e.g. `1.3.20`
-6. Create a new `Release` on GitHub
+1. `release_preflight` (read-only): the npm token authenticates (`npm whoami`), the GitHub token can push
+   to this repository, `git push --dry-run` works, the version is not a tag or `release/<version>` branch
+   on origin and not on npm, `src/RELEASE.md` has a non-empty section headed exactly
+   `## Release ONDEWO SIP Typescript Client <version>`, and the host tools are present. A failure here
+   stops the release before anything is built, committed, pushed or published.
+2. `build` the specified version of the `ondewo-sip-api` with the pinned proto compiler, and
+   `check_build` that every proto produced code.
+3. `release_tests`: `npm ci` and the full `npm test` suite (auth with a 100% coverage gate, examples, the
+   API surface derived from the protos, release notes, credentials and step order), then the pre-commit
+   hooks. A red suite stops the release.
+4. Commit the generated code locally, then `check_tag_matches_package`: every file the npm package ships
+   is committed and byte-equal at that commit.
+5. Publish `npm/` to npmjs.com, then wait until npm serves the version (`check_npm_published`).
+6. Push the commit, create and push the release branch (`release/<version>`) and tag (`<version>`).
+7. Create the GitHub release (refused when the notes are empty), then `release_verify`: the tag is on
+   origin, the GitHub release has a body, npm serves the version.
 
-> :warning: The Release Automation checks if the build has created all the proto-code files, but it does not check the code-integrity. Please build and test the generated code prior to starting the release process.
+`make release_preflight` and `make release_verify` can also be run on their own; both are read-only and
+take the tokens from the environment or, when it is set, from the directory `DEVOPS_ACCOUNT_DIR` names.
+
+Host requirements: `docker`, `make`, `git`, `perl` and `curl`, plus SSH push access to this repository.
+`gh` and the npm registry calls always run in the pinned `tools` stage of `Dockerfile.utils`; `node`/`npm`
+run on the host when it has them and in that image otherwise. No credential is written to the host, and
+only the container that uses a token receives it.
 
 [comment]: <> (END OF GITHUB README)
