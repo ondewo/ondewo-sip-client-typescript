@@ -27,6 +27,7 @@
 
 import { test as runTestCase } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 
@@ -261,3 +262,28 @@ runTestCase('the toolchain image is pinned, carries no credential and has a tool
 	assert.ok(dockerignore.includes('*'));
 	assert.ok(dockerignore.includes('ondewo-devops-accounts'));
 });
+
+/**
+ * @param args - Extra make arguments.
+ * @returns The `-le <attempts>` and `sleep <seconds>` values `make -n check_npm_published` would poll with.
+ */
+function npmPollOf(args: string[]): string[] {
+	const out: string = execFileSync('make', ['-s', '-n', '-C', REPO_ROOT, 'check_npm_published', ...args], {
+		encoding: 'utf8'
+	});
+	return [/-le (\d+)/.exec(out)?.[1] ?? '', /sleep (\d+)/.exec(out)?.[1] ?? ''];
+}
+
+runTestCase(
+	'release_verify honours the driver-wide VERIFY_ATTEMPTS / VERIFY_INTERVAL_S and the old NPM_VERIFY_*',
+	() => {
+		assert.match(MAKEFILE, /^NPM_VERIFY_ATTEMPTS\?=\$\(VERIFY_ATTEMPTS\)$/m);
+		assert.match(MAKEFILE, /^NPM_VERIFY_INTERVAL_S\?=\$\(VERIFY_INTERVAL_S\)$/m);
+		assert.deepEqual(npmPollOf([]), ['20', '30']);
+		assert.deepEqual(npmPollOf(['VERIFY_ATTEMPTS=3', 'VERIFY_INTERVAL_S=10']), ['3', '10']);
+		assert.deepEqual(
+			npmPollOf(['VERIFY_ATTEMPTS=3', 'VERIFY_INTERVAL_S=10', 'NPM_VERIFY_ATTEMPTS=7', 'NPM_VERIFY_INTERVAL_S=5']),
+			['7', '5']
+		);
+	}
+);
