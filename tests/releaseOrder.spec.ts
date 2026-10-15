@@ -268,8 +268,23 @@ runTestCase('the toolchain image is pinned, carries no credential and has a tool
  * @returns The `-le <attempts>` and `sleep <seconds>` values `make -n check_npm_published` would poll with.
  */
 function npmPollOf(args: string[]): string[] {
+	// Hermetic: the Makefile's bare `export` hands NPM_VERIFY_* to `npm test` whenever make runs it
+	// (release_tests does), and the driver sets VERIFY_*; either would win over the defaults asserted here.
+	const env: NodeJS.ProcessEnv = { ...process.env };
+	for (const name of [
+		'VERIFY_ATTEMPTS',
+		'VERIFY_INTERVAL_S',
+		'NPM_VERIFY_ATTEMPTS',
+		'NPM_VERIFY_INTERVAL_S',
+		'MAKEFLAGS',
+		'MAKELEVEL',
+		'MFLAGS'
+	]) {
+		delete env[name];
+	}
 	const out: string = execFileSync('make', ['-s', '-n', '-C', REPO_ROOT, 'check_npm_published', ...args], {
-		encoding: 'utf8'
+		encoding: 'utf8',
+		env
 	});
 	return [/-le (\d+)/.exec(out)?.[1] ?? '', /sleep (\d+)/.exec(out)?.[1] ?? ''];
 }
