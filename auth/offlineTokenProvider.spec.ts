@@ -85,8 +85,11 @@ function makeFetchStub(responses: StubResponse[]): FetchStub {
 		if (next === undefined) {
 			throw new Error('fetch stub called more times than expected');
 		}
-		const status: number = next.status !== undefined ? next.status : 200;
-		const bodyText: string = typeof next.body === 'string' ? next.body : JSON.stringify(next.body);
+		const status: number = next.status ?? 200;
+		let bodyText: string = JSON.stringify(next.body);
+		if (typeof next.body === 'string') {
+			bodyText = next.body;
+		}
 		return Promise.resolve({
 			ok: status >= 200 && status < 300,
 			status,

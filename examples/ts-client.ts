@@ -113,7 +113,10 @@ async function main(): Promise<void> {
 	const host: string = process.env.ONDEWO_HOST ?? 'localhost';
 	const port: string = process.env.ONDEWO_PORT ?? '8080';
 	const useSecureChannel: boolean = (process.env.ONDEWO_USE_SECURE_CHANNEL ?? 'false').toLowerCase() === 'true';
-	const scheme: string = useSecureChannel ? 'https' : 'http';
+	let scheme: string = 'http';
+	if (useSecureChannel) {
+		scheme = 'https';
+	}
 	const grpcWebUrl: string = `${scheme}://${host}:${port}`;
 
 	// --- SIP service-specific configuration. ---
