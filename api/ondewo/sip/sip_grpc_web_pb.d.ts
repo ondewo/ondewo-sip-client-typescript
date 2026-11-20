@@ -100,6 +100,13 @@ export class SipClient {
                response: ondewo_sip_sip_pb.SipStatus) => void
   ): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
 
+  sipSendDtmf(
+    request: ondewo_sip_sip_pb.SipSendDtmfRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: ondewo_sip_sip_pb.SipStatus) => void
+  ): grpcWeb.ClientReadableStream<ondewo_sip_sip_pb.SipStatus>;
+
 }
 
 export class SipPromiseClient {
@@ -169,6 +176,11 @@ export class SipPromiseClient {
 
   sipSetCallMediaControl(
     request: ondewo_sip_sip_pb.SipSetCallMediaControlRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<ondewo_sip_sip_pb.SipStatus>;
+
+  sipSendDtmf(
+    request: ondewo_sip_sip_pb.SipSendDtmfRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<ondewo_sip_sip_pb.SipStatus>;
 

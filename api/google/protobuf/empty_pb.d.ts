@@ -3,6 +3,8 @@ import * as jspb from 'google-protobuf'
 
 
 export class Empty extends jspb.Message {
+  constructor();
+  constructor(opt_data?: Empty.AsObject);
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Empty.AsObject;
   static toObject(includeInstance: boolean, msg: Empty): Empty.AsObject;
@@ -13,6 +15,6 @@ export class Empty extends jspb.Message {
 
 export namespace Empty {
   export type AsObject = {
-  }
+  };
 }
 

@@ -3,6 +3,8 @@ import * as jspb from 'google-protobuf'
 
 
 export class Timestamp extends jspb.Message {
+  constructor();
+  constructor(opt_data?: Timestamp.AsObject);
   getSeconds(): number;
   setSeconds(value: number): Timestamp;
 
@@ -19,8 +21,8 @@ export class Timestamp extends jspb.Message {
 
 export namespace Timestamp {
   export type AsObject = {
-    seconds: number,
-    nanos: number,
-  }
+    seconds: number;
+    nanos: number;
+  };
 }
 

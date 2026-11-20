@@ -5,6 +5,8 @@ import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/t
 
 
 export class SipEndCallRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipEndCallRequest.AsObject);
   getHardHangup(): boolean;
   setHardHangup(value: boolean): SipEndCallRequest;
 
@@ -26,12 +28,12 @@ export class SipEndCallRequest extends jspb.Message {
 
 export namespace SipEndCallRequest {
   export type AsObject = {
-    hardHangup: boolean,
-    endReason: SipEndCallRequest.EndCallReason,
-    amdResult?: AnsweringMachineDetectionResult.AsObject,
-  }
+    hardHangup: boolean;
+    endReason: SipEndCallRequest.EndCallReason;
+    amdResult?: AnsweringMachineDetectionResult.AsObject;
+  };
 
-  export enum EndCallReason { 
+  export enum EndCallReason {
     END_CALL_REASON_UNSPECIFIED = 0,
     ANSWERING_MACHINE = 1,
     ANSWERING_MACHINE_VOICE_MESSAGE_LEFT = 2,
@@ -40,6 +42,8 @@ export namespace SipEndCallRequest {
 }
 
 export class SipReportAnsweringMachineDetectedRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipReportAnsweringMachineDetectedRequest.AsObject);
   getAmdResult(): AnsweringMachineDetectionResult | undefined;
   setAmdResult(value?: AnsweringMachineDetectionResult): SipReportAnsweringMachineDetectedRequest;
   hasAmdResult(): boolean;
@@ -55,11 +59,13 @@ export class SipReportAnsweringMachineDetectedRequest extends jspb.Message {
 
 export namespace SipReportAnsweringMachineDetectedRequest {
   export type AsObject = {
-    amdResult?: AnsweringMachineDetectionResult.AsObject,
-  }
+    amdResult?: AnsweringMachineDetectionResult.AsObject;
+  };
 }
 
 export class AnsweringMachineDetectionResult extends jspb.Message {
+  constructor();
+  constructor(opt_data?: AnsweringMachineDetectionResult.AsObject);
   getVerdict(): AnsweringMachineDetectionResult.Verdict;
   setVerdict(value: AnsweringMachineDetectionResult.Verdict): AnsweringMachineDetectionResult;
 
@@ -96,17 +102,17 @@ export class AnsweringMachineDetectionResult extends jspb.Message {
 
 export namespace AnsweringMachineDetectionResult {
   export type AsObject = {
-    verdict: AnsweringMachineDetectionResult.Verdict,
-    cause: AnsweringMachineDetectionResult.Cause,
-    confidence: number,
-    decisionMs: number,
-    ruleId: string,
-    matchedCueIdsList: Array<string>,
-    actionTaken: AnsweringMachineDetectionResult.ActionTaken,
-    callId: string,
-  }
+    verdict: AnsweringMachineDetectionResult.Verdict;
+    cause: AnsweringMachineDetectionResult.Cause;
+    confidence: number;
+    decisionMs: number;
+    ruleId: string;
+    matchedCueIdsList: Array<string>;
+    actionTaken: AnsweringMachineDetectionResult.ActionTaken;
+    callId: string;
+  };
 
-  export enum Verdict { 
+  export enum Verdict {
     VERDICT_UNSPECIFIED = 0,
     HUMAN = 1,
     MACHINE = 2,
@@ -118,7 +124,7 @@ export namespace AnsweringMachineDetectionResult {
     UNKNOWN = 8,
   }
 
-  export enum Cause { 
+  export enum Cause {
     CAUSE_UNSPECIFIED = 0,
     CADENCE = 1,
     KEYWORD = 2,
@@ -130,7 +136,7 @@ export namespace AnsweringMachineDetectionResult {
     SILENCE = 8,
   }
 
-  export enum ActionTaken { 
+  export enum ActionTaken {
     ACTION_TAKEN_UNSPECIFIED = 0,
     HUNG_UP = 1,
     CONTINUED = 2,
@@ -140,6 +146,8 @@ export namespace AnsweringMachineDetectionResult {
 }
 
 export class SipStartCallRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipStartCallRequest.AsObject);
   getCalleeId(): string;
   setCalleeId(value: string): SipStartCallRequest;
 
@@ -156,12 +164,14 @@ export class SipStartCallRequest extends jspb.Message {
 
 export namespace SipStartCallRequest {
   export type AsObject = {
-    calleeId: string,
-    headersMap: Array<[string, string]>,
-  }
+    calleeId: string;
+    headersMap: Array<[string, string]>;
+  };
 }
 
 export class SipRegisterAccountRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipRegisterAccountRequest.AsObject);
   getAccountName(): string;
   setAccountName(value: string): SipRegisterAccountRequest;
 
@@ -184,14 +194,16 @@ export class SipRegisterAccountRequest extends jspb.Message {
 
 export namespace SipRegisterAccountRequest {
   export type AsObject = {
-    accountName: string,
-    password: string,
-    authUsername: string,
-    outboundProxy: string,
-  }
+    accountName: string;
+    password: string;
+    authUsername: string;
+    outboundProxy: string;
+  };
 }
 
 export class SipStartSessionRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipStartSessionRequest.AsObject);
   getAccountName(): string;
   setAccountName(value: string): SipStartSessionRequest;
 
@@ -208,12 +220,14 @@ export class SipStartSessionRequest extends jspb.Message {
 
 export namespace SipStartSessionRequest {
   export type AsObject = {
-    accountName: string,
-    autoAnswerInterval: number,
-  }
+    accountName: string;
+    autoAnswerInterval: number;
+  };
 }
 
 export class SipTransferCallRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipTransferCallRequest.AsObject);
   getTransferId(): string;
   setTransferId(value: string): SipTransferCallRequest;
 
@@ -222,6 +236,12 @@ export class SipTransferCallRequest extends jspb.Message {
 
   getOutcomeTimeoutMs(): number;
   setOutcomeTimeoutMs(value: number): SipTransferCallRequest;
+
+  getDelegation(): SipTransferDelegation;
+  setDelegation(value: SipTransferDelegation): SipTransferCallRequest;
+
+  getDelegatedRequestId(): string;
+  setDelegatedRequestId(value: string): SipTransferCallRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SipTransferCallRequest.AsObject;
@@ -233,13 +253,55 @@ export class SipTransferCallRequest extends jspb.Message {
 
 export namespace SipTransferCallRequest {
   export type AsObject = {
-    transferId: string,
-    headersMap: Array<[string, string]>,
-    outcomeTimeoutMs: number,
-  }
+    transferId: string;
+    headersMap: Array<[string, string]>;
+    outcomeTimeoutMs: number;
+    delegation: SipTransferDelegation;
+    delegatedRequestId: string;
+  };
+}
+
+export class SipDelegatedTransfer extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipDelegatedTransfer.AsObject);
+  getRequestId(): string;
+  setRequestId(value: string): SipDelegatedTransfer;
+
+  getRequestedAt(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setRequestedAt(value?: google_protobuf_timestamp_pb.Timestamp): SipDelegatedTransfer;
+  hasRequestedAt(): boolean;
+  clearRequestedAt(): SipDelegatedTransfer;
+
+  getTargetIsPhoneNumber(): boolean;
+  setTargetIsPhoneNumber(value: boolean): SipDelegatedTransfer;
+
+  getTransferId(): string;
+  setTransferId(value: string): SipDelegatedTransfer;
+
+  getHeadersMap(): jspb.Map<string, string>;
+  clearHeadersMap(): SipDelegatedTransfer;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SipDelegatedTransfer.AsObject;
+  static toObject(includeInstance: boolean, msg: SipDelegatedTransfer): SipDelegatedTransfer.AsObject;
+  static serializeBinaryToWriter(message: SipDelegatedTransfer, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SipDelegatedTransfer;
+  static deserializeBinaryFromReader(message: SipDelegatedTransfer, reader: jspb.BinaryReader): SipDelegatedTransfer;
+}
+
+export namespace SipDelegatedTransfer {
+  export type AsObject = {
+    requestId: string;
+    requestedAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
+    targetIsPhoneNumber: boolean;
+    transferId: string;
+    headersMap: Array<[string, string]>;
+  };
 }
 
 export class SipStatus extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipStatus.AsObject);
   getAccountName(): string;
   setAccountName(value: string): SipStatus;
 
@@ -292,6 +354,19 @@ export class SipStatus extends jspb.Message {
   getSipResponseCode(): number;
   setSipResponseCode(value: number): SipStatus;
 
+  getDelegatedTransfer(): SipDelegatedTransfer | undefined;
+  setDelegatedTransfer(value?: SipDelegatedTransfer): SipStatus;
+  hasDelegatedTransfer(): boolean;
+  clearDelegatedTransfer(): SipStatus;
+
+  getCapabilitiesList(): Array<string>;
+  setCapabilitiesList(value: Array<string>): SipStatus;
+  clearCapabilitiesList(): SipStatus;
+  addCapabilities(value: string, index?: number): SipStatus;
+
+  getWarmTransferOutcomeNoticeStatus(): SipWarmTransferOutcomeNoticeStatus;
+  setWarmTransferOutcomeNoticeStatus(value: SipWarmTransferOutcomeNoticeStatus): SipStatus;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SipStatus.AsObject;
   static toObject(includeInstance: boolean, msg: SipStatus): SipStatus.AsObject;
@@ -302,25 +377,28 @@ export class SipStatus extends jspb.Message {
 
 export namespace SipStatus {
   export type AsObject = {
-    accountName: string,
-    timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-    statusType: SipStatus.StatusType,
-    calleeId: string,
-    transferCallId: string,
-    headersMap: Array<[string, string]>,
-    description: string,
-    exceptionName: string,
-    exceptionTraceback: string,
-    nluSessionName: string,
-    amdResult?: AnsweringMachineDetectionResult.AsObject,
-    callId: string,
-    botMuted: boolean,
-    listeningPaused: boolean,
-    callAudioStreams: number,
-    sipResponseCode: number,
-  }
+    accountName: string;
+    timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject;
+    statusType: SipStatus.StatusType;
+    calleeId: string;
+    transferCallId: string;
+    headersMap: Array<[string, string]>;
+    description: string;
+    exceptionName: string;
+    exceptionTraceback: string;
+    nluSessionName: string;
+    amdResult?: AnsweringMachineDetectionResult.AsObject;
+    callId: string;
+    botMuted: boolean;
+    listeningPaused: boolean;
+    callAudioStreams: number;
+    sipResponseCode: number;
+    delegatedTransfer?: SipDelegatedTransfer.AsObject;
+    capabilitiesList: Array<string>;
+    warmTransferOutcomeNoticeStatus: SipWarmTransferOutcomeNoticeStatus;
+  };
 
-  export enum StatusType { 
+  export enum StatusType {
     NO_SESSION = 0,
     REGISTERED = 1,
     READY = 2,
@@ -348,6 +426,8 @@ export namespace SipStatus {
 }
 
 export class SipStatusHistoryResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipStatusHistoryResponse.AsObject);
   getStatusHistoryList(): Array<SipStatus>;
   setStatusHistoryList(value: Array<SipStatus>): SipStatusHistoryResponse;
   clearStatusHistoryList(): SipStatusHistoryResponse;
@@ -363,11 +443,13 @@ export class SipStatusHistoryResponse extends jspb.Message {
 
 export namespace SipStatusHistoryResponse {
   export type AsObject = {
-    statusHistoryList: Array<SipStatus.AsObject>,
-  }
+    statusHistoryList: Array<SipStatus.AsObject>;
+  };
 }
 
 export class SipSetCallMediaControlRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipSetCallMediaControlRequest.AsObject);
   getBotVoice(): MediaControlSetting;
   setBotVoice(value: MediaControlSetting): SipSetCallMediaControlRequest;
 
@@ -380,6 +462,11 @@ export class SipSetCallMediaControlRequest extends jspb.Message {
   getParticipantsPresent(): boolean;
   setParticipantsPresent(value: boolean): SipSetCallMediaControlRequest;
 
+  getWarmTransferOutcome(): SipWarmTransferOutcomeNotice | undefined;
+  setWarmTransferOutcome(value?: SipWarmTransferOutcomeNotice): SipSetCallMediaControlRequest;
+  hasWarmTransferOutcome(): boolean;
+  clearWarmTransferOutcome(): SipSetCallMediaControlRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SipSetCallMediaControlRequest.AsObject;
   static toObject(includeInstance: boolean, msg: SipSetCallMediaControlRequest): SipSetCallMediaControlRequest.AsObject;
@@ -390,14 +477,77 @@ export class SipSetCallMediaControlRequest extends jspb.Message {
 
 export namespace SipSetCallMediaControlRequest {
   export type AsObject = {
-    botVoice: MediaControlSetting,
-    botListening: MediaControlSetting,
-    owner: MediaControlOwner,
-    participantsPresent: boolean,
-  }
+    botVoice: MediaControlSetting;
+    botListening: MediaControlSetting;
+    owner: MediaControlOwner;
+    participantsPresent: boolean;
+    warmTransferOutcome?: SipWarmTransferOutcomeNotice.AsObject;
+  };
+}
+
+export class SipWarmTransferOutcomeNotice extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipWarmTransferOutcomeNotice.AsObject);
+  getRequestId(): string;
+  setRequestId(value: string): SipWarmTransferOutcomeNotice;
+
+  getOutcome(): SipWarmTransferOutcome;
+  setOutcome(value: SipWarmTransferOutcome): SipWarmTransferOutcomeNotice;
+
+  getIntroSession(): string;
+  setIntroSession(value: string): SipWarmTransferOutcomeNotice;
+
+  getCalleeDisplayName(): string;
+  setCalleeDisplayName(value: string): SipWarmTransferOutcomeNotice;
+
+  getCause(): string;
+  setCause(value: string): SipWarmTransferOutcomeNotice;
+
+  getFallbackText(): string;
+  setFallbackText(value: string): SipWarmTransferOutcomeNotice;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SipWarmTransferOutcomeNotice.AsObject;
+  static toObject(includeInstance: boolean, msg: SipWarmTransferOutcomeNotice): SipWarmTransferOutcomeNotice.AsObject;
+  static serializeBinaryToWriter(message: SipWarmTransferOutcomeNotice, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SipWarmTransferOutcomeNotice;
+  static deserializeBinaryFromReader(message: SipWarmTransferOutcomeNotice, reader: jspb.BinaryReader): SipWarmTransferOutcomeNotice;
+}
+
+export namespace SipWarmTransferOutcomeNotice {
+  export type AsObject = {
+    requestId: string;
+    outcome: SipWarmTransferOutcome;
+    introSession: string;
+    calleeDisplayName: string;
+    cause: string;
+    fallbackText: string;
+  };
+}
+
+export class SipSendDtmfRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipSendDtmfRequest.AsObject);
+  getDigits(): string;
+  setDigits(value: string): SipSendDtmfRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SipSendDtmfRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SipSendDtmfRequest): SipSendDtmfRequest.AsObject;
+  static serializeBinaryToWriter(message: SipSendDtmfRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SipSendDtmfRequest;
+  static deserializeBinaryFromReader(message: SipSendDtmfRequest, reader: jspb.BinaryReader): SipSendDtmfRequest;
+}
+
+export namespace SipSendDtmfRequest {
+  export type AsObject = {
+    digits: string;
+  };
 }
 
 export class SipCallAudioConfig extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioConfig.AsObject);
   getMode(): SipCallAudioMode;
   setMode(value: SipCallAudioMode): SipCallAudioConfig;
 
@@ -426,16 +576,18 @@ export class SipCallAudioConfig extends jspb.Message {
 
 export namespace SipCallAudioConfig {
   export type AsObject = {
-    mode: SipCallAudioMode,
-    sampleRateHz: number,
-    frameMs: number,
-    takeOver: boolean,
-    streamId: string,
-    maxDurationS: number,
-  }
+    mode: SipCallAudioMode;
+    sampleRateHz: number;
+    frameMs: number;
+    takeOver: boolean;
+    streamId: string;
+    maxDurationS: number;
+  };
 }
 
 export class SipCallAudioFrame extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioFrame.AsObject);
   getPcmS16le(): Uint8Array | string;
   getPcmS16le_asU8(): Uint8Array;
   getPcmS16le_asB64(): string;
@@ -454,12 +606,14 @@ export class SipCallAudioFrame extends jspb.Message {
 
 export namespace SipCallAudioFrame {
   export type AsObject = {
-    pcmS16le: Uint8Array | string,
-    sequence: number,
-  }
+    pcmS16le: Uint8Array | string;
+    sequence: number;
+  };
 }
 
 export class SipCallAudioRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioRequest.AsObject);
   getConfig(): SipCallAudioConfig | undefined;
   setConfig(value?: SipCallAudioConfig): SipCallAudioRequest;
   hasConfig(): boolean;
@@ -472,6 +626,8 @@ export class SipCallAudioRequest extends jspb.Message {
 
   getAgentMuted(): boolean;
   setAgentMuted(value: boolean): SipCallAudioRequest;
+  hasAgentMuted(): boolean;
+  clearAgentMuted(): SipCallAudioRequest;
 
   getRequestCase(): SipCallAudioRequest.RequestCase;
 
@@ -485,12 +641,12 @@ export class SipCallAudioRequest extends jspb.Message {
 
 export namespace SipCallAudioRequest {
   export type AsObject = {
-    config?: SipCallAudioConfig.AsObject,
-    audio?: SipCallAudioFrame.AsObject,
-    agentMuted: boolean,
-  }
+    config?: SipCallAudioConfig.AsObject;
+    audio?: SipCallAudioFrame.AsObject;
+    agentMuted?: boolean;
+  };
 
-  export enum RequestCase { 
+  export enum RequestCase {
     REQUEST_NOT_SET = 0,
     CONFIG = 1,
     AUDIO = 2,
@@ -499,6 +655,8 @@ export namespace SipCallAudioRequest {
 }
 
 export class SipCallAudioStarted extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioStarted.AsObject);
   getStreamId(): string;
   setStreamId(value: string): SipCallAudioStarted;
 
@@ -521,14 +679,16 @@ export class SipCallAudioStarted extends jspb.Message {
 
 export namespace SipCallAudioStarted {
   export type AsObject = {
-    streamId: string,
-    sampleRateHz: number,
-    frameMs: number,
-    mode: SipCallAudioMode,
-  }
+    streamId: string;
+    sampleRateHz: number;
+    frameMs: number;
+    mode: SipCallAudioMode;
+  };
 }
 
 export class SipCallAudioStats extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioStats.AsObject);
   getFramesSent(): number;
   setFramesSent(value: number): SipCallAudioStats;
 
@@ -554,15 +714,17 @@ export class SipCallAudioStats extends jspb.Message {
 
 export namespace SipCallAudioStats {
   export type AsObject = {
-    framesSent: number,
-    framesDropped: number,
-    framesReceived: number,
-    underruns: number,
-    framesDiscarded: number,
-  }
+    framesSent: number;
+    framesDropped: number;
+    framesReceived: number;
+    underruns: number;
+    framesDiscarded: number;
+  };
 }
 
 export class SipCallAudioEnded extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioEnded.AsObject);
   getReason(): SipCallAudioEndReason;
   setReason(value: SipCallAudioEndReason): SipCallAudioEnded;
 
@@ -579,12 +741,14 @@ export class SipCallAudioEnded extends jspb.Message {
 
 export namespace SipCallAudioEnded {
   export type AsObject = {
-    reason: SipCallAudioEndReason,
-    detail: string,
-  }
+    reason: SipCallAudioEndReason;
+    detail: string;
+  };
 }
 
 export class SipCallAudioResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipCallAudioResponse.AsObject);
   getStarted(): SipCallAudioStarted | undefined;
   setStarted(value?: SipCallAudioStarted): SipCallAudioResponse;
   hasStarted(): boolean;
@@ -617,13 +781,13 @@ export class SipCallAudioResponse extends jspb.Message {
 
 export namespace SipCallAudioResponse {
   export type AsObject = {
-    started?: SipCallAudioStarted.AsObject,
-    audio?: SipCallAudioFrame.AsObject,
-    stats?: SipCallAudioStats.AsObject,
-    ended?: SipCallAudioEnded.AsObject,
-  }
+    started?: SipCallAudioStarted.AsObject;
+    audio?: SipCallAudioFrame.AsObject;
+    stats?: SipCallAudioStats.AsObject;
+    ended?: SipCallAudioEnded.AsObject;
+  };
 
-  export enum ResponseCase { 
+  export enum ResponseCase {
     RESPONSE_NOT_SET = 0,
     STARTED = 1,
     AUDIO = 2,
@@ -633,6 +797,8 @@ export namespace SipCallAudioResponse {
 }
 
 export class SipPlayWavFilesRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: SipPlayWavFilesRequest.AsObject);
   getWavFilesList(): Array<Uint8Array | string>;
   setWavFilesList(value: Array<Uint8Array | string>): SipPlayWavFilesRequest;
   clearWavFilesList(): SipPlayWavFilesRequest;
@@ -648,26 +814,46 @@ export class SipPlayWavFilesRequest extends jspb.Message {
 
 export namespace SipPlayWavFilesRequest {
   export type AsObject = {
-    wavFilesList: Array<Uint8Array | string>,
-  }
+    wavFilesList: Array<Uint8Array | string>;
+  };
 }
 
-export enum MediaControlSetting { 
+export enum SipTransferDelegation {
+  SIP_TRANSFER_DELEGATION_UNSPECIFIED = 0,
+  SIP_TRANSFER_DELEGATION_CLAIM = 1,
+  SIP_TRANSFER_DELEGATION_EXECUTE = 2,
+  SIP_TRANSFER_DELEGATION_DISCARD = 3,
+}
+export enum MediaControlSetting {
   MEDIA_CONTROL_SETTING_UNCHANGED = 0,
   MEDIA_CONTROL_SETTING_ON = 1,
   MEDIA_CONTROL_SETTING_OFF = 2,
 }
-export enum MediaControlOwner { 
+export enum MediaControlOwner {
   MEDIA_CONTROL_OWNER_UNSPECIFIED = 0,
   MEDIA_CONTROL_OWNER_OPERATOR = 1,
   MEDIA_CONTROL_OWNER_PARTICIPANT = 2,
 }
-export enum SipCallAudioMode { 
+export enum SipWarmTransferOutcome {
+  SIP_WARM_TRANSFER_OUTCOME_UNSPECIFIED = 0,
+  SIP_WARM_TRANSFER_OUTCOME_DECLINED = 1,
+  SIP_WARM_TRANSFER_OUTCOME_UNREACHABLE = 2,
+  SIP_WARM_TRANSFER_OUTCOME_DELEGATION_EXPIRED = 3,
+}
+export enum SipWarmTransferOutcomeNoticeStatus {
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_UNSPECIFIED = 0,
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_QUEUED = 1,
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_DUPLICATE = 2,
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_DISABLED = 3,
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_INVALID = 4,
+  SIP_WARM_TRANSFER_OUTCOME_NOTICE_STATUS_PENDING = 5,
+}
+export enum SipCallAudioMode {
   SIP_CALL_AUDIO_MODE_UNSPECIFIED = 0,
   SIP_CALL_AUDIO_MODE_LISTEN = 1,
   SIP_CALL_AUDIO_MODE_TALK = 2,
 }
-export enum SipCallAudioEndReason { 
+export enum SipCallAudioEndReason {
   SIP_CALL_AUDIO_END_REASON_UNSPECIFIED = 0,
   SIP_CALL_AUDIO_END_REASON_CLIENT_CLOSED = 1,
   SIP_CALL_AUDIO_END_REASON_CALL_ENDED = 2,
