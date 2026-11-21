@@ -674,7 +674,7 @@ export class OfflineTokenProvider {
 				: {
 						grant_type: 'refresh_token',
 						client_id: this.clientId,
-						refresh_token: this.refreshToken as string
+						refresh_token: this.refreshToken ?? ''
 					};
 		const body: Record<string, unknown> = await postTokenRequest(
 			this.tokenEndpoint,
@@ -683,37 +683,32 @@ export class OfflineTokenProvider {
 			action,
 			this.timings.httpTimeoutInS
 		);
-		if (action === 'login' && typeof body.refresh_token !== 'string') {
-			throw new TokenError(
-				'Keycloak token response did not contain a refresh_token; the SDK client must have ' +
-					'directAccessGrants + the offline_access scope (ondewo-nlu-cai-sdk-public)'
-			);
-		}
-		this.storeTokens(body, action === 'login');
+		this.storeTokens(body);
 	}
 
 	/**
 	 * Validate a token response and only then store it, so a malformed response changes no state.
 	 *
 	 * @param body - The parsed token response.
-	 * @param isLogin - The login adopts any string refresh token (an empty one too, as before 7.6.1); a
-	 *   refresh adopts only a non-empty one and otherwise keeps the previous token.
 	 * @throws {TokenError} When the response carries no usable `access_token` or a non-numeric `expires_in`.
 	 */
-	private storeTokens(body: Record<string, unknown>, isLogin: boolean): void {
+	private storeTokens(body: Record<string, unknown>): void {
 		const accessToken: unknown = body.access_token;
 		if (typeof accessToken !== 'string' || accessToken === '') {
 			// Field NAMES only, never values: a token response is made almost entirely of credentials.
 			throw new TokenError(
 				'Keycloak token response did not contain an access_token; the response carried the fields ' +
-					`[${Object.keys(body).sort().join(', ')}] (values withheld: a token response is credential material)`
+					`[${Object.keys(body)
+						.sort()
+						.map((name: string): string => `'${name}'`)
+						.join(', ')}] (values withheld: a token response is credential material)`
 			);
 		}
 		const expiresInS: number = parseExpiresIn(body.expires_in);
 		this.accessToken = accessToken;
 		// Keycloak may rotate the offline refresh token; keep the previous one when the response has none.
 		const refreshToken: unknown = body.refresh_token;
-		if (typeof refreshToken === 'string' && (isLogin || refreshToken !== '')) {
+		if (typeof refreshToken === 'string' && refreshToken !== '') {
 			this.refreshToken = refreshToken;
 		}
 		this.expiresAtInS = this.nowInS() + Math.max(expiresInS, 0);

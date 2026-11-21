@@ -809,7 +809,7 @@ describe('E. response validation', (): void => {
 			start({ script: [{ body: { refresh_token: 'secret-offline-token-77', expires_in: 300 } }] }),
 			(error: unknown): boolean => {
 				assert.ok(error instanceof TokenError);
-				assert.match(error.message, /\[expires_in, refresh_token\]/);
+				assert.match(error.message, /carried the fields \['expires_in', 'refresh_token'\] \(values withheld/);
 				assert.ok(!error.message.includes('secret-offline-token-77'));
 				return true;
 			}

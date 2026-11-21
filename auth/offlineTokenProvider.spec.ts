@@ -520,13 +520,60 @@ runTestCase('login rejects a non-2xx token response with TokenError', async (): 
 });
 
 runTestCase(
-	'login rejects when the token response carries no refresh_token (missing offline_access)',
+	'a login response without a refresh_token is ACCEPTED (spec S3) and the refresh then sends an empty one',
 	async (): Promise<void> => {
-		const stub: FetchStub = makeFetchStub([{ body: { access_token: 'access-1', expires_in: 300 } }]);
-		await assert.rejects(
-			(): Promise<OfflineTokenProvider> => login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl }),
-			expectTokenError(/did not contain a refresh_token; the SDK client must have directAccessGrants/)
-		);
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', expires_in: 31 } },
+			{ body: { access_token: 'access-2', refresh_token: 'offline-2', expires_in: 31 } },
+			{ body: { access_token: 'access-3', expires_in: 31 } }
+		]);
+
+		mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+		try {
+			// Like the python SDK: no refresh_token keeps the previous (still empty) value, it is no error.
+			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl });
+			assert.equal(provider.getAccessToken(), 'access-1');
+			assert.equal(stub.calls.length, 1);
+
+			mock.timers.tick(1000);
+			await flushMicrotasks();
+			assert.equal(stub.calls[1].params.get('grant_type'), 'refresh_token');
+			assert.equal(stub.calls[1].params.get('refresh_token'), '');
+			assert.equal(provider.getAccessToken(), 'access-2');
+
+			mock.timers.tick(1000);
+			await flushMicrotasks();
+			// The rotated offline-2 was adopted and is kept when the next response carries none.
+			assert.equal(stub.calls[2].params.get('refresh_token'), 'offline-2');
+			assert.equal(provider.getAccessToken(), 'access-3');
+			provider.stop();
+		} finally {
+			mock.timers.reset();
+		}
+	}
+);
+
+runTestCase(
+	'a login response whose refresh_token is not a string is ACCEPTED and the value is NOT adopted',
+	async (): Promise<void> => {
+		const stub: FetchStub = makeFetchStub([
+			{ body: { access_token: 'access-1', refresh_token: 42, expires_in: 31 } },
+			{ body: { access_token: 'access-2', refresh_token: 'offline-2', expires_in: 31 } }
+		]);
+
+		mock.timers.enable({ apis: ['setTimeout', 'Date'] });
+		try {
+			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl });
+			assert.equal(provider.getAccessToken(), 'access-1');
+
+			mock.timers.tick(1000);
+			await flushMicrotasks();
+			assert.equal(stub.calls[1].params.get('refresh_token'), '');
+			assert.equal(provider.getAccessToken(), 'access-2');
+			provider.stop();
+		} finally {
+			mock.timers.reset();
+		}
 	}
 );
 
@@ -600,7 +647,7 @@ runTestCase('login rejects a token response whose access_token is an empty strin
 });
 
 runTestCase(
-	'an empty refresh_token string is ACCEPTED at login and sent verbatim on the refresh (current behavior)',
+	'an empty refresh_token string at login is NOT adopted (spec S3) and the refresh sends an empty one',
 	async (): Promise<void> => {
 		const stub: FetchStub = makeFetchStub([
 			{ body: { access_token: 'access-1', refresh_token: '', expires_in: 31 } },
@@ -609,7 +656,7 @@ runTestCase(
 
 		mock.timers.enable({ apis: ['setTimeout', 'Date'] });
 		try {
-			// `''` IS a string, so bootstrap()'s `refreshToken === null` check does not fire: login succeeds.
+			// `''` is not adopted; the previous value is kept, and there was none.
 			const provider: OfflineTokenProvider = await login({ ...BASE_OPTIONS, fetchImpl: stub.fetchImpl });
 			assert.equal(provider.getAccessToken(), 'access-1');
 
