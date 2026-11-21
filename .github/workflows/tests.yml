@@ -2,9 +2,8 @@ name: tests
 
 on:
   push:
-    branches:
-      - master
-      - 'release/**'
+    # Every branch, like the nlu, s2t, t2s and survey clients, so a feature branch is tested on push.
+    branches: ['**']
     tags:
       - '*'
   pull_request:
